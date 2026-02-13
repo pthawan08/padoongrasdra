@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNY Photo Booth</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <section id="step-welcome" class="active">
+            <h1>🧧 ตู้ถ่ายรูปตรุษจีน 🧧</h1>
+            <p>รับคำอวยพรเฮงๆ พร้อมเก็บภาพความประทับใจ</p>
+            <button class="btn-primary" onclick="startCamera()">เริ่มถ่ายรูป</button>
+        </section>
+
+        <section id="step-camera" class="hidden">
+            <div class="camera-wrapper">
+                <video id="video" autoplay playsinline></video>
+                <div id="countdown"></div>
+            </div>
+            <p id="status-text">เตรียมตัว...</p>
+        </section>
+
+        <section id="step-edit" class="hidden">
+            <h2>เลือกกรอบสีองคุณ</h2>
+            <div class="preview-bg" id="preview-container">
+                <div id="photo-grid" class="photo-grid">
+                    </div>
+                <div id="final-blessing" class="blessing-text"></div>
+            </div>
+            
+            <div class="controls">
+                <div class="color-options">
+                    <button class="color-btn black" onclick="applyFrame('black')"></button>
+                    <button class="color-btn white" onclick="applyFrame('white')"></button>
+                    <button class="color-btn gold" onclick="applyFrame('gold')"></button>
+                    <button class="color-btn red" onclick="applyFrame('red')"></button>
+                </div>
+                <p id="blessing-display">เลือกสีด้านบนเพื่อรับคำอวยพร</p>
+                <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">บันทึกและสร้าง QR Code</button>
+            </div>
+        </section>
+
+        <section id="step-result" class="hidden">
+            <h2>🎉 สำเร็จ!</h2>
+            <div id="qrcode-area">
+                <div id="qrcode"></div>
+                <p>สแกนเพื่อรับรูป</p>
+            </div>
+            <div id="final-image-show"></div>
+            <a id="download-link" class="btn-primary">ดาวน์โหลดรูปภาพ</a>
+            <button class="btn-secondary" onclick="location.reload()">ถ่ายใหม่</button>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
