@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth Pro</title>
+    <title>CNY Photo Booth PRS </title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
 </head>
@@ -11,25 +11,28 @@
 
     <div class="container">
         <section id="step-welcome" class="active">
-            <h1>🧧 ตู้ถ่ายรูปตรุษจีน 🧧</h1>
+            <h1>🧧 Photo Booth Chinese New Year 🧧</h1>
             <p>เลือกรูปแบบเฟรมที่คุณต้องการ</p>
             
             <div class="layout-selector">
+                <button class="layout-btn" onclick="selectLayout('strip2')">
+                    <div class="icon-strip-2"></div>
+                    <span>2 ช่อง (ตั้ง)</span>
+                </button>
+                
                 <button class="layout-btn" onclick="selectLayout('strip3')">
                     <div class="icon-strip-3"></div>
                     <span>3 ช่อง (ตั้ง)</span>
                 </button>
+                
                 <button class="layout-btn" onclick="selectLayout('strip4')">
                     <div class="icon-strip-4"></div>
                     <span>4 ช่อง (ตั้ง)</span>
                 </button>
+                
                 <button class="layout-btn" onclick="selectLayout('grid2x2')">
                     <div class="icon-grid-2x2"></div>
                     <span>4 ช่อง (จัตุรัส)</span>
-                </button>
-                <button class="layout-btn" onclick="selectLayout('grid3x3')">
-                    <div class="icon-grid-3x3"></div>
-                    <span>9 ช่อง (รวมมิตร)</span>
                 </button>
             </div>
         </section>
@@ -43,7 +46,7 @@
         </section>
 
         <section id="step-edit" class="hidden">
-            <h2>เลือกสีมงคล</h2>
+            <h2>เลือกสีกรอบรูป</h2>
             <div class="frame-container" id="preview-container">
                 <div id="photo-grid" class="photo-grid">
                     </div>
@@ -57,8 +60,8 @@
                     <button class="color-btn gold" onclick="applyFrame('gold')"></button>
                     <button class="color-btn red" onclick="applyFrame('red')"></button>
                 </div>
-                <p id="blessing-display">...คำอวยพร...</p>
-                <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">บันทึกรูปและรับ QR Code</button>
+                <p id="blessing-display">...</p>
+                <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">บันทึกรูปและสร้าง QR</button>
                 <button class="btn-secondary" onclick="location.reload()">เริ่มใหม่</button>
             </div>
         </section>
@@ -67,7 +70,7 @@
             <h2>🎉 รูปของคุณมาแล้ว!</h2>
             <div id="qrcode-area">
                 <div id="qrcode"></div>
-                <p>สแกนเพื่อเปิดรูปต้นฉบับ</p>
+                <p class="small-text">สแกนเพื่อรับรูปต้นฉบับ</p>
             </div>
             <div id="final-image-show"></div>
             <a id="download-link" class="btn-primary">ดาวน์โหลดรูปภาพ</a>
