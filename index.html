@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (PRS V7)</title>
+    <title>CNY Photo Booth (Final V7.1)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
     <style>
@@ -227,10 +227,10 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 7.0 (Festive)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 7.1 (Fixed Text Color)</div>
 
         <section id="step-welcome" class="active">
-            <h1>Chinese New Year</h1>
+            <h1>ตรุษจีนเฮงๆ</h1>
             <p>🧧 ถ่ายรูปรับคำอวยพรสุดปัง 🧧</p>
             
             <div class="content-box">
@@ -373,20 +373,26 @@
             c.style.cssText = ""; t.style.cssText = "";
             c.className = 'frame-container';
 
-            // จัดการสีแบบเข้มข้น
+            // จัดการสีแบบเข้มข้น และบังคับสีตัวอักษรให้ชัดเจน
             if(color === 'red') {
                 c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
-                t.style.color = '#FFD700'; t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)';
+                t.style.color = '#FFD700'; // สีทอง
+                t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)';
             } 
             else if(color === 'gold') {
                 c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-                t.style.color = '#8B0000'; t.style.textShadow = 'none'; // ตัวหนังสือแดงเข้มบนพื้นทอง
+                t.style.color = '#8B0000'; // 🔥 สีแดงเลือดหมู บนพื้นทอง (อ่านชัด!) 🔥
+                t.style.textShadow = 'none'; 
             } 
             else if(color === 'black') {
-                c.style.background = '#000'; t.style.color = '#FFD700'; t.style.textShadow = 'none';
+                c.style.background = '#000'; 
+                t.style.color = '#FFD700'; // สีทอง
+                t.style.textShadow = 'none';
             } 
             else if(color === 'white') {
-                c.style.background = '#fff'; t.style.color = '#D90000'; t.style.textShadow = 'none';
+                c.style.background = '#fff'; 
+                t.style.color = '#D90000'; // สีแดง
+                t.style.textShadow = 'none';
             }
             t.innerHTML = blessings[color];
         }
