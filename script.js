@@ -1,43 +1,79 @@
 let currentStep = 1;
 let photos = [];
 let stream = null;
-const totalShots = 3;
+let currentLayout = 'strip3'; // ค่าเริ่มต้น
+let shotsNeeded = 3;
 
-const blessings = {
-    black: "🖤 อำนาจ บารมี มั่นคงดั่งขุนเขา",
-    white: "🤍 สงบ สว่าง พบเจอแต่มิตรแท้",
-    gold: "💛 มั่งคั่ง ร่ำรวย เงินทองไหลมาเทมา",
-    red: "❤️ เฮงๆ ปังๆ รักรุ่ง งานพุ่งแรง!"
+const layouts = {
+    'strip3': { count: 3, class: 'grid-strip3' },
+    'strip4': { count: 4, class: 'grid-strip4' },
+    'grid2x2': { count: 4, class: 'grid-2x2' },
+    'grid3x3': { count: 9, class: 'grid-3x3' }
 };
 
-// 1. จัดการกล้อง
+const blessings = {
+    black: "🖤 อำนาจ บารมี มั่นคงดั่งภูผา",
+    white: "🤍 จิตใจผ่องใส พบเจอแต่กัลยาณมิตร",
+    gold: "💛 มั่งคั่ง ร่ำรวย ทองกองเต็มบ้าน",
+    red: "❤️ รักรุ่ง งานพุ่ง เฮงตลอดปี!"
+};
+
+// 1. เลือก Layout และเริ่มกล้อง
+function selectLayout(type) {
+    currentLayout = type;
+    shotsNeeded = layouts[type].count;
+    startCamera();
+}
+
 async function startCamera() {
     switchStep(2);
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        // บังคับสัดส่วน 4:3 เพื่อคุณภาพที่ดีที่สุด
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "user", aspectRatio: 4/3 }, 
+            audio: false 
+        });
         document.getElementById('video').srcObject = stream;
         startCountdown();
-    } catch (e) { alert("กรุณาอนุญาตให้ใช้กล้อง"); }
+    } catch (e) { 
+        alert("ไม่สามารถเปิดกล้องได้: " + e.message); 
+        location.reload();
+    }
 }
 
+// 2. นับถอยหลังและถ่ายรูป
 async function startCountdown() {
     photos = [];
-    for (let i = 1; i <= totalShots; i++) {
-        document.getElementById('status-text').innerText = `ช็อตที่ ${i} / ${totalShots}`;
-        await new Promise(r => {
+    for (let i = 1; i <= shotsNeeded; i++) {
+        document.getElementById('status-text').innerText = `รูปที่ ${i} / ${shotsNeeded}`;
+        
+        await new Promise(resolve => {
             let c = 3;
             const el = document.getElementById('countdown');
             el.innerText = c;
+            el.style.display = 'block';
+            
             const timer = setInterval(() => {
                 c--;
-                if(c>0) el.innerText = c;
-                else { clearInterval(timer); el.innerText = "📸"; r(); }
+                if(c > 0) {
+                    el.innerText = c;
+                } else {
+                    clearInterval(timer);
+                    el.innerText = "📸";
+                    resolve();
+                }
             }, 1000);
         });
+
         capture();
-        await new Promise(r => setTimeout(r, 800)); // พักแป๊บนึง
+        
+        // แสดงผลแวบๆ ว่าถ่ายแล้ว
+        document.getElementById('countdown').style.display = 'none';
+        await new Promise(r => setTimeout(r, 500)); // พัก 0.5 วิ
     }
-    stream.getTracks().forEach(t => t.stop());
+    
+    // จบการถ่าย
+    if(stream) stream.getTracks().forEach(t => t.stop());
     setupPreview();
     switchStep(3);
 }
@@ -45,24 +81,34 @@ async function startCountdown() {
 function capture() {
     const video = document.getElementById('video');
     const cvs = document.createElement('canvas');
-    cvs.width = video.videoWidth; cvs.height = video.videoHeight;
+    // ตั้งขนาด Canvas ตามขนาดจริงของวิดีโอเพื่อความชัด
+    cvs.width = video.videoWidth; 
+    cvs.height = video.videoHeight;
     const ctx = cvs.getContext('2d');
-    ctx.translate(cvs.width, 0); ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0);
+    
+    // กลับด้านรูป (Mirror)
+    ctx.translate(cvs.width, 0); 
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, cvs.width, cvs.height);
+    
     photos.push(cvs.toDataURL('image/png'));
 }
 
-// 2. จัดการ Preview และเลือกสี
+// 3. จัดเรียงรูปตาม Layout
 function setupPreview() {
     const grid = document.getElementById('photo-grid');
+    grid.className = 'photo-grid ' + layouts[currentLayout].class; // ใส่ Class เพื่อจัด Layout
     grid.innerHTML = '';
-    photos.forEach(img => {
+    
+    photos.forEach(imgSrc => {
         const div = document.createElement('div');
         div.className = 'photo-slot';
-        div.style.backgroundImage = `url(${img})`;
+        // ใช้ background-image แทน img tag เพื่อแก้ปัญหา Distortion
+        div.style.backgroundImage = `url(${imgSrc})`; 
         grid.appendChild(div);
     });
-    applyFrame('red');
+    
+    applyFrame('red'); // สีเริ่มต้น
 }
 
 function applyFrame(color) {
@@ -71,8 +117,8 @@ function applyFrame(color) {
     const display = document.getElementById('blessing-display');
     
     let bg = '#D72638', text = '#fff';
-    if(color === 'black') { bg='#000'; text='#fff'; }
-    if(color === 'white') { bg='#fff'; text='#000'; }
+    if(color === 'black') { bg='#1a1a1a'; text='#fff'; }
+    if(color === 'white') { bg='#ffffff'; text='#000'; }
     if(color === 'gold') { bg='#F4D35E'; text='#000'; }
     
     container.style.backgroundColor = bg;
@@ -81,24 +127,26 @@ function applyFrame(color) {
     display.innerText = blessings[color];
 }
 
-// 3. รวมรูป + อัปโหลดไป Vercel Blob
+// 4. สร้างรูปและอัปโหลด
 function uploadAndGenerate() {
     const btn = document.getElementById('save-btn');
-    btn.innerText = "กำลังสร้างรูปและอัปโหลด... ⏳";
+    btn.innerText = "กำลังสร้างรูป... ⏳";
     btn.disabled = true;
 
     const element = document.getElementById('preview-container');
     
-    html2canvas(element, { scale: 2 }).then(canvas => {
+    // scale: 3 เพื่อความคมชัดสูงสุด
+    html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
         canvas.toBlob(async (blob) => {
             try {
-                // ส่งไปที่ API ของเรา
+                // ส่งไปที่ API
                 const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, {
                     method: 'POST', body: blob
                 });
+                
                 if(!res.ok) throw new Error('Upload Failed');
                 
-                const data = await res.json(); // ได้ URL จาก Blob มาแล้ว!
+                const data = await res.json();
                 
                 showResult(data.url);
             } catch (err) {
@@ -106,25 +154,32 @@ function uploadAndGenerate() {
                 btn.innerText = "ลองใหม่";
                 btn.disabled = false;
             }
-        }, 'image/png');
+        }, 'image/png', 0.9); // คุณภาพ JPEG 90%
     });
 }
 
 function showResult(url) {
     switchStep(4);
+    
     // แสดงรูป
     const div = document.getElementById('final-image-show');
-    div.innerHTML = `<img src="${url}" alt="Result">`;
+    div.innerHTML = `<img src="${url}" alt="Result Photo">`;
     
-    // ปุ่มโหลด
+    // ปุ่มดาวน์โหลด
     const link = document.getElementById('download-link');
     link.href = url;
-    link.download = `cny-photo-${Date.now()}.png`;
+    link.download = `cny-booth-${Date.now()}.png`;
 
-    // QR Code
-    new QRCode(document.getElementById("qrcode"), {
-        text: url,
-        width: 150, height: 150
+    // QR Code (URL ตรงๆ ของรูปเลย)
+    const qrContainer = document.getElementById("qrcode");
+    qrContainer.innerHTML = "";
+    new QRCode(qrContainer, {
+        text: url, // <-- ใส่ URL ของรูปโดยตรง สแกนปุ๊บเปิดรูปปั๊บ
+        width: 180,
+        height: 180,
+        colorDark : "#D72638", // QR สีแดงสวยๆ
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
     });
 }
 
