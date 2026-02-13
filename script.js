@@ -5,7 +5,6 @@ let stream = null;
 let currentLayout = 'strip3';
 let shotsNeeded = 3;
 
-// Layout Configs
 const layouts = {
     'strip2': { count: 2, class: 'grid-strip2' },
     'strip3': { count: 3, class: 'grid-strip3' },
@@ -13,7 +12,6 @@ const layouts = {
     'grid2x2': { count: 4, class: 'grid-2x2' }
 };
 
-// คำอวยพร (จีน <br> ไทย)
 const blessings = {
     black: "新年快乐，恭喜发财！<br>สวัดีปีใหม่  ขอให้ร่ำรวย",
     white: "学业进步，马到成功！<br>การเรียนก้าวหน้าและประสบความสำเร็จ",
@@ -64,7 +62,6 @@ async function startCountdownSequence() {
         countdownEl.style.display = 'none';
         if (i < shotsNeeded) await new Promise(r => setTimeout(r, 800));
     }
-    
     if(stream) stream.getTracks().forEach(t => t.stop());
     setupPreview();
     switchStep(3);
@@ -91,67 +88,51 @@ function setupPreview() {
         div.style.backgroundImage = `url(${imgSrc})`; 
         grid.appendChild(div);
     });
-    // เริ่มต้นด้วยสีแดง
     window.applyFrame('red');
 }
 
-// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (แก้ใหม่) 🔥
+// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (ฉบับแก้ขาด) 🔥
 window.applyFrame = function(color) {
     const container = document.getElementById('preview-container');
     const textDiv = document.getElementById('final-blessing');
     
-    // 1. ล้างค่าเก่าทิ้งให้หมด (สำคัญมาก! เพื่อไม่ให้สีเหลือง/แดงค้าง)
-    container.style.background = 'none'; 
-    container.style.backgroundImage = 'none';
-    container.style.backgroundColor = 'transparent';
-    container.style.border = 'none'; 
-    container.style.boxShadow = 'none'; // ล้างเงาด้วยเผื่อมี
+    // ล้างค่าเก่าทั้งหมด
+    container.style.cssText = ''; 
 
-    // 2. ตั้งค่าใหม่ตามสีที่เลือก
     if(color === 'red') {
-        // แดง: พื้นแดงไล่เฉด, ขอบทอง
+        // ใช้ background แทน backgroundColor เพื่อให้ทับได้ทุกอย่าง
         container.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
         container.style.border = '4px solid #FFD700'; 
-        container.style.boxShadow = '0 10px 20px rgba(138, 0, 0, 0.4)';
         textDiv.style.color = '#FFD700'; 
     } 
     else if(color === 'gold') {
-        // ทอง: พื้นทองไล่เฉด, ขอบแดง
         container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
         container.style.border = '4px solid #D90000';
-        container.style.boxShadow = '0 10px 20px rgba(218, 165, 32, 0.4)';
-        textDiv.style.color = '#8A0000'; // ตัวหนังสือสีแดงเข้ม
+        textDiv.style.color = '#8A0000'; 
     } 
     else if(color === 'black') {
-        // ดำ: พื้นดำล้วน, ขอบทอง
-        container.style.backgroundColor = '#1a1a1a';
+        container.style.background = '#1a1a1a'; // สีทึบ
         container.style.border = '4px solid #FFD700';
-        container.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
         textDiv.style.color = '#FFD700';
     } 
     else if(color === 'white') {
-        // ขาว: พื้นขาวล้วน, ขอบแดง
-        container.style.backgroundColor = '#ffffff';
+        container.style.background = '#ffffff'; // สีทึบ
         container.style.border = '4px solid #D90000';
-        container.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
         textDiv.style.color = '#D90000';
     }
     
-    // 3. ใส่ข้อความ
     textDiv.innerHTML = blessings[color];
 }
 
 window.uploadAndGenerate = function() {
     const btn = document.getElementById('save-btn');
-    const originalText = btn.innerText;
     btn.innerText = "กำลังสร้างรูป... ⏳";
     btn.disabled = true;
 
     const element = document.getElementById('preview-container');
-    
     html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
         canvas.toBlob(async (blob) => {
-            if (!blob) { alert("Error generating image"); btn.disabled = false; return; }
+            if (!blob) { alert("Error"); btn.disabled = false; return; }
             try {
                 const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, {
                     method: 'POST', body: blob
