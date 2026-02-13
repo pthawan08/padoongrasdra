@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth PRS </title>
-    <link rel="stylesheet" href="style.css">
+    <title>CNY Photo Booth Pro</title>
+    <link rel="stylesheet" href="style.css?v=final">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,17 +19,14 @@
                     <div class="icon-strip-2"></div>
                     <span>2 ช่อง (ตั้ง)</span>
                 </button>
-                
                 <button class="layout-btn" onclick="selectLayout('strip3')">
                     <div class="icon-strip-3"></div>
                     <span>3 ช่อง (ตั้ง)</span>
                 </button>
-                
                 <button class="layout-btn" onclick="selectLayout('strip4')">
                     <div class="icon-strip-4"></div>
                     <span>4 ช่อง (ตั้ง)</span>
                 </button>
-                
                 <button class="layout-btn" onclick="selectLayout('grid2x2')">
                     <div class="icon-grid-2x2"></div>
                     <span>4 ช่อง (จัตุรัส)</span>
@@ -46,10 +43,8 @@
         </section>
 
         <section id="step-edit" class="hidden">
-            <h2>เลือกสีกรอบรูป</h2>
             <div class="frame-container" id="preview-container">
-                <div id="photo-grid" class="photo-grid">
-                    </div>
+                <div id="photo-grid" class="photo-grid"></div>
                 <div id="final-blessing" class="blessing-text"></div>
             </div>
             
@@ -60,14 +55,14 @@
                     <button class="color-btn gold" onclick="applyFrame('gold')"></button>
                     <button class="color-btn red" onclick="applyFrame('red')"></button>
                 </div>
-                <p id="blessing-display">...</p>
+                
                 <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">บันทึกรูปและสร้าง QR</button>
                 <button class="btn-secondary" onclick="location.reload()">เริ่มใหม่</button>
             </div>
         </section>
 
         <section id="step-result" class="hidden">
-            <h2>🎉 รูปของคุณมาแล้ว!</h2>
+            <h2>🧧 รูปของคุณมาแล้ว!</h2>
             <div id="qrcode-area">
                 <div id="qrcode"></div>
                 <p class="small-text">สแกนเพื่อรับรูปต้นฉบับ</p>
@@ -80,6 +75,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="script.js"></script>
+    
+    <script src="script.js?v=final"></script>
 </body>
 </html>
