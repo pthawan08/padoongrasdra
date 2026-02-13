@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V5)</title>
+    <title>CNY Photo Booth (Final V6)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Reset & Layout --- */
+        /* --- ตั้งค่าสีหลัก --- */
+        :root {
+            --bg-cream: #FFFCE0;
+            --red-main: #D90000;
+            --red-dark: #800000;
+            --gold-main: #FFD700;
+        }
+
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #FFFCE0;
+            background-color: var(--bg-cream);
             background-image: radial-gradient(circle at 50% 50%, #fffce0 0%, #f7f2c5 100%);
             margin: 0;
             text-align: center;
@@ -19,56 +26,79 @@
             min-height: 100vh;
             color: #333;
         }
+
         .container { width: 100%; max-width: 500px; padding: 25px; box-sizing: border-box; }
         .hidden { display: none !important; }
         .active { display: block !important; }
 
-        h1 { color: #D90000; font-weight: 800; text-shadow: 2px 2px 0 #DAA520; margin-bottom: 5px; }
-
-        /* --- ปุ่มเลือก Layout --- */
-        .layout-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .layout-btn {
-            background: #fff; border: 2px solid #D90000;
-            border-radius: 10px; padding: 10px; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        h1 {
+            color: var(--red-main);
+            font-weight: 800;
+            text-shadow: 2px 2px 0 #DAA520;
+            margin-bottom: 10px;
         }
-        .layout-btn span { color: #D90000; font-weight: bold; font-size: 0.8rem; }
+
+        /* --- ปุ่มเลือก Layout (สไตล์อั่งเปา) --- */
+        .layout-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         
-        /* Icons */
-        [class^="icon-"] { border-color: #D90000; }
-        [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: #D90000; }
-        .icon-strip-2 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
+        .layout-btn {
+            /* พื้นหลังแดงไล่เฉด เหมือนซองอั่งเปา */
+            background: linear-gradient(180deg, #E60000 0%, #990000 100%);
+            border: 2px solid var(--gold-main);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 0 #5e0000, 0 10px 15px rgba(0,0,0,0.2);
+            transition: all 0.1s;
+        }
+        .layout-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #5e0000, 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .layout-btn span { 
+            color: var(--gold-main); /* ตัวหนังสือทอง */
+            font-weight: 800; 
+            font-size: 1rem; 
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+        
+        /* ไอคอนสีทอง */
+        [class^="icon-"] { border-color: var(--gold-main); }
+        [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--gold-main); }
+        .icon-strip-2 { width: 24px; height: 36px; border: 2px solid; display: flex; flex-direction: column; }
         .icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid; }
-        .icon-strip-3 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
+        .icon-strip-3 { width: 24px; height: 36px; border: 2px solid; display: flex; flex-direction: column; }
         .icon-strip-3::before, .icon-strip-3::after { content:''; flex:1; border-bottom: 1px solid; }
-        .icon-strip-4 { width: 20px; height: 35px; border: 2px solid; display: flex; flex-direction: column; } 
+        .icon-strip-4 { width: 24px; height: 40px; border: 2px solid; display: flex; flex-direction: column; } 
         .icon-strip-4::before { content:''; flex:1; border-bottom: 1px solid; } .icon-strip-4::after { content:''; flex:1; border-top: 1px solid; }
-        .icon-grid-2x2 { width: 30px; height: 30px; border: 2px solid; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .icon-grid-2x2 { width: 36px; height: 36px; border: 2px solid; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .icon-grid-2x2 div { border: 1px solid; }
 
-        /* --- กรอบและรูป --- */
+        /* --- กรอบรูป (ตัดขอบทิ้ง!) --- */
         .frame-container {
             padding: 20px;
-            /* พื้นหลังเริ่มต้น: ใส (รอ JS ยัดสี) */
-            background: transparent;
-            border: none;
+            background: transparent; 
             border-radius: 4px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            /* เงาฟุ้งสวยๆ ไม่เอาขอบแข็งๆ */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
             margin-bottom: 20px;
-            transition: all 0.2s ease;
+            border: none !important; /* บังคับลบขอบ */
         }
-        .photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; }
-        
-        .grid-strip2 { grid-template-columns: 1fr; }
-        .grid-strip3 { grid-template-columns: 1fr; }
-        .grid-strip4 { grid-template-columns: 1fr; }
-        .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
 
+        .photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; }
         .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; }
+        
+        /* Grid Setting */
+        .grid-strip2, .grid-strip3, .grid-strip4 { grid-template-columns: 1fr; }
+        .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
         .grid-strip2 .photo-slot, .grid-strip3 .photo-slot, .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
         .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
-        /* ข้อความ: ตั้งค่ากลางๆ ไว้ เดี๋ยว JS บังคับสีเอง */
+        /* คำอวยพร */
         .blessing-text {
             margin-top: 15px; font-size: 1.3rem;
             font-weight: 800; font-family: 'Kanit';
@@ -80,17 +110,46 @@
         .color-btn {
             width: 50px; height: 50px; border-radius: 50%;
             border: 3px solid #fff; cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s;
         }
+        .color-btn:hover { transform: scale(1.1); }
         .color-btn.black { background: #000; } 
         .color-btn.white { background: #fff; border-color: #ccc; }
         .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
         .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-        /* --- ปุ่มเสริม --- */
+        /* --- ปุ่ม Save (แดงอั่งเปา) --- */
+        .btn-primary {
+            background: linear-gradient(180deg, #FF0000 0%, #990000 100%) !important;
+            color: #FFD700 !important;
+            border: 2px solid #FFD700 !important;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            display: inline-block;
+            box-sizing: border-box;
+            margin-top: 15px;
+            text-decoration: none;
+            box-shadow: 0 6px 0 #5e0000, 0 10px 20px rgba(0,0,0,0.3) !important;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+            transition: all 0.1s;
+            position: relative; top: 0;
+        }
+        .btn-primary:active {
+            top: 6px;
+            box-shadow: 0 0 0 #5e0000, 0 5px 10px rgba(0,0,0,0.2) !important;
+        }
+        .btn-primary:disabled {
+            background: #ccc !important; border-color: #999 !important; color: #666 !important;
+            box-shadow: none !important; top: 0 !important;
+        }
+
         .btn-secondary {
             background: transparent; border: none;
-            color: #8A0000; margin-top: 15px; cursor: pointer;
+            color: var(--red-dark); margin-top: 15px; cursor: pointer;
             text-decoration: underline; font-weight: bold;
         }
 
@@ -98,6 +157,7 @@
         .camera-wrapper {
             position: relative; width: 100%; padding-bottom: 133.33%;
             background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px;
+            border: 4px solid var(--gold-main); /* ขอบทองเฉพาะตอนถ่ายรูป */
         }
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         #countdown {
@@ -110,18 +170,18 @@
         #qrcode-area {
             background: #fff; padding: 15px; border-radius: 10px;
             display: inline-block; margin-bottom: 15px;
-            border: 4px solid #D90000;
+            border: 4px solid var(--red-main);
         }
         #final-image-show img {
             width: 100%; border-radius: 8px; margin-bottom: 10px;
-            border: 4px solid #FFD700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Ver 5.0 (Force Style Mode)</div>
+        <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Ver 6.0 (Clean Frame)</div>
 
         <section id="step-welcome" class="active">
             <h1>🧧 Chinese New Year 🧧</h1>
@@ -156,26 +216,7 @@
                     <button class="color-btn red" onclick="applyFrame('red')"></button>
                 </div>
                 
-                <button id="save-btn" onclick="uploadAndGenerate()" 
-                    style="
-                        background: linear-gradient(180deg, #D90000 0%, #800000 100%);
-                        color: #FFD700;
-                        border: 3px solid #FFD700;
-                        padding: 15px 20px;
-                        border-radius: 50px;
-                        font-size: 1.2rem;
-                        font-weight: 800;
-                        cursor: pointer;
-                        width: 100%;
-                        margin-top: 15px;
-                        box-shadow: 0 6px 0 #5e0000, 0 10px 20px rgba(0,0,0,0.3);
-                        text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-                        font-family: 'Kanit', sans-serif;
-                    "
-                >
-                    บันทึกรูปและสร้าง QR
-                </button>
-
+                <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">บันทึกรูปและสร้าง QR</button>
                 <button class="btn-secondary" onclick="location.reload()">เริ่มใหม่</button>
             </div>
         </section>
@@ -187,26 +228,7 @@
                 <p style="margin:0; font-size:0.9rem; font-weight:bold;">สแกนเพื่อรับรูป</p>
             </div>
             <div id="final-image-show"></div>
-            <a id="download-link" 
-               style="
-                    display: inline-block;
-                    background: linear-gradient(180deg, #D90000 0%, #800000 100%);
-                    color: #FFD700;
-                    border: 3px solid #FFD700;
-                    padding: 15px 20px;
-                    border-radius: 50px;
-                    font-size: 1.2rem;
-                    font-weight: 800;
-                    cursor: pointer;
-                    width: 100%;
-                    margin-top: 15px;
-                    box-shadow: 0 6px 0 #5e0000, 0 10px 20px rgba(0,0,0,0.3);
-                    text-decoration: none;
-                    box-sizing: border-box;
-                    font-family: 'Kanit', sans-serif;
-               ">
-               ดาวน์โหลดรูปภาพ
-            </a>
+            <a id="download-link" class="btn-primary">ดาวน์โหลดรูปภาพ</a>
             <button class="btn-secondary" onclick="location.reload()">ถ่ายใหม่</button>
         </section>
     </div>
@@ -229,9 +251,9 @@
         };
 
         const blessings = {
-            black: "新年快乐，恭喜发财！<br>สวัดีปีใหม่  ขอให้ร่ำรวย",
+            black: "新年快乐，恭喜发财！<br>สวัสดีปีใหม่ ขอให้ร่ำรวย",
             white: "学业进步，马到成功！<br>การเรียนก้าวหน้าและประสบความสำเร็จ",
-            gold: "新年快乐，万事如意！<br>สวัสดีปีใหม่  สมปรารถนาทุกประการ",
+            gold: "新年快乐，万事如意！<br>สวัสดีปีใหม่ สมปรารถนาทุกประการ",
             red: "顺顺利利，好运连连！<br>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี"
         };
 
@@ -289,44 +311,38 @@
             applyFrame('red');
         }
 
-        // 🔥🔥🔥 ไม้ตาย: สั่งเปลี่ยน Style ด้วย JS แบบดิบๆ (Inline Styles Override) 🔥🔥🔥
+        // 🔥 แก้ไขใหม่: ลบ BORDER ทิ้งทั้งหมด! 🔥
         function applyFrame(color) {
             const c = document.getElementById('preview-container');
             const t = document.getElementById('final-blessing');
             
-            // ล้างค่าเก่าทั้งหมด
+            // ล้างค่าเก่า
             c.style.cssText = "";
             t.style.cssText = "";
+            c.className = 'frame-container';
 
+            // ตั้งค่าสีพื้นหลัง และ บังคับไม่ให้มีเส้นขอบ (border: none)
             if(color === 'red') {
-                // แดง: พื้นไล่เฉดแดง, ขอบทอง, ตัวหนังสือทอง
                 c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
-                c.style.border = '4px solid #FFD700';
-                
-                t.style.color = '#FFD700'; // สีทอง
+                c.style.border = 'none'; // ❌ NO BORDER
+                t.style.color = '#FFD700'; 
                 t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)';
             } 
             else if(color === 'gold') {
-                // ทอง: พื้นไล่เฉดทอง, ขอบแดง, **ตัวหนังสือแดงเข้ม (อ่านออก!)**
                 c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-                c.style.border = '4px solid #D90000';
-                
-                t.style.color = '#8A0000'; // แดงเข้ม
-                t.style.textShadow = 'none'; // เอาเงาออก
+                c.style.border = 'none'; // ❌ NO BORDER
+                t.style.color = '#8A0000'; 
+                t.style.textShadow = 'none';
             } 
             else if(color === 'black') {
-                // ดำ: พื้นดำ, ขอบทอง, ตัวหนังสือทอง
                 c.style.background = '#000000';
-                c.style.border = '4px solid #FFD700';
-                
+                c.style.border = 'none'; // ❌ NO BORDER
                 t.style.color = '#FFD700';
                 t.style.textShadow = 'none';
             } 
             else if(color === 'white') {
-                // ขาว: พื้นขาว, ขอบแดง, ตัวหนังสือแดง
                 c.style.background = '#ffffff';
-                c.style.border = '4px solid #D90000';
-                
+                c.style.border = 'none'; // ❌ NO BORDER
                 t.style.color = '#D90000';
                 t.style.textShadow = 'none';
             }
