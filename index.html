@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V3)</title>
+    <title>CNY Photo Booth (Final V4)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&display=swap" rel="stylesheet">
     
     <style>
         /* --- ตั้งค่าสี --- */
         :root {
             --cny-red: #D90000;       
-            --cny-dark-red: #8A0000;  
             --cny-gold: #FFD700;      
             --cny-bg: #FFFCE0;        
         }
@@ -44,54 +43,18 @@
             margin-bottom: 5px;
         }
 
-        /* --- กรอบพรีวิว (ใช้ CSS Class คุมสี แทน JS) --- */
+        /* --- กรอบพรีวิว --- */
         .frame-container {
             padding: 20px;
+            /* พื้นหลังเริ่มต้นใสๆ */
+            background: transparent; 
             border-radius: 4px;
+            /* เงาฟุ้งๆ */
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             margin-bottom: 20px;
             transition: all 0.3s ease;
-            /* ค่าเริ่มต้น (ใสๆ) */
-            background: transparent;
-            border: none;
-        }
-
-        /* 🔴 ธีมสีแดง */
-        .frame-container.theme-red {
-            background: linear-gradient(135deg, #D90000 0%, #8A0000 100%);
-            /* ไม่เอาขอบสีทอง */
-            border: 4px solid #D90000; 
-        }
-        .frame-container.theme-red .blessing-text {
-            color: #FFD700 !important; /* ตัวหนังสือทอง */
-        }
-
-        /* 🟡 ธีมสีทอง (แก้ปัญหาตัวหนังสือกลืน) */
-        .frame-container.theme-gold {
-            background: linear-gradient(135deg, #FFD700 0%, #DAA520 100%);
-            border: 4px solid #D90000; /* ขอบแดง ตัดกับทอง */
-        }
-        .frame-container.theme-gold .blessing-text {
-            color: #8A0000 !important; /* 🔥 ตัวหนังสือแดงเข้ม อ่านออกแน่นอน! 🔥 */
-            text-shadow: none !important;
-        }
-
-        /* ⚫️ ธีมสีดำ */
-        .frame-container.theme-black {
-            background: #1a1a1a;
-            border: 4px solid #1a1a1a;
-        }
-        .frame-container.theme-black .blessing-text {
-            color: #FFD700 !important; /* ตัวหนังสือทอง */
-        }
-
-        /* ⚪️ ธีมสีขาว */
-        .frame-container.theme-white {
-            background: #ffffff;
-            border: 4px solid #ffffff;
-        }
-        .frame-container.theme-white .blessing-text {
-            color: #D90000 !important; /* ตัวหนังสือแดง */
+            /* ตัดขอบทิ้ง */
+            border: none !important; 
         }
 
         .photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; }
@@ -111,7 +74,7 @@
             margin-top: 15px; font-size: 1.3rem;
             font-weight: 800; font-family: 'Kanit';
             line-height: 1.5; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            /* สีตัวอักษรจะถูกกำหนดโดย JS */
         }
 
         /* --- ปุ่มเลือก Layout --- */
@@ -122,9 +85,11 @@
             display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
         .layout-btn span { color: var(--cny-red); font-weight: bold; font-size: 0.8rem; }
+        
         /* Icons */
         [class^="icon-"] { border-color: var(--cny-red); }
         [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); }
+        
         .icon-strip-2 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
         .icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid; }
         .icon-strip-3 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
@@ -147,12 +112,14 @@
         .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
         .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-        /* --- 🔥 ปุ่มซองอั่งเปา (บังคับแดง!) 🔥 --- */
+        /* --- 🔥 ปุ่มซองอั่งเปา (Ang Pao V4 - บังคับสี!) 🔥 --- */
         .btn-primary {
-            /* ไล่สีแดงสด ไปแดงเข้ม */
-            background: linear-gradient(180deg, #FF0000 0%, #990000 100%) !important;
+            /* แดงเข้ม ไล่สี ให้ดูแพง */
+            background: linear-gradient(to bottom, #D90000 0%, #800000 100%) !important;
+            
             color: #FFD700 !important; /* ตัวหนังสือทอง */
             border: 2px solid #FFD700 !important; /* ขอบทอง */
+            
             padding: 15px 20px;
             border-radius: 50px;
             font-size: 1.2rem;
@@ -163,15 +130,16 @@
             box-sizing: border-box;
             margin-top: 15px;
             text-decoration: none;
-            /* เงาปุ่มสีแดงเข้ม */
-            box-shadow: 0 6px 0 #660000, 0 10px 20px rgba(0,0,0,0.3) !important;
+            
+            /* เงาปุ่มหนาๆ สีเลือดหมู */
+            box-shadow: 0 6px 0 #5e0000, 0 10px 20px rgba(0,0,0,0.3) !important;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
             transition: all 0.1s;
             position: relative; top: 0;
         }
         .btn-primary:active {
             top: 6px;
-            box-shadow: 0 0 0 #660000, 0 5px 10px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 0 0 #5e0000, 0 5px 10px rgba(0,0,0,0.2) !important;
         }
         .btn-primary:disabled {
             background: #ccc !important; border-color: #999 !important; color: #666 !important;
@@ -211,7 +179,7 @@
 <body>
 
     <div class="container">
-        <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Ver 3.0 (Fixed Colors)</div>
+        <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Ver 4.0 (Fixed Text Color)</div>
 
         <section id="step-welcome" class="active">
             <h1>🧧 Chinese New Year 🧧</h1>
@@ -341,15 +309,40 @@
             applyFrame('red');
         }
 
-        // 🔥 แก้ไขใหม่: เปลี่ยนแค่ Class แล้วให้ CSS จัดการสีตัวอักษรเอง 🔥
+        // 🔥 แก้ไข Logic การเปลี่ยนสี (ใช้ JS บังคับ Style เลย ชัวร์ที่สุด) 🔥
         function applyFrame(color) {
             const c = document.getElementById('preview-container');
             const t = document.getElementById('final-blessing');
             
-            // ล้าง Class เก่า แล้วใส่ Class ธีมใหม่
-            c.className = 'frame-container theme-' + color;
+            // ล้างค่าเก่าทั้งหมดก่อน
+            c.style.cssText = ''; 
+            t.style.cssText = ''; 
+            c.className = 'frame-container';
+
+            // บังคับ Style ตามสีที่เลือก (Inline Style ชนะทุก CSS)
+            if(color === 'red') {
+                c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
+                c.style.border = '4px solid #D90000'; 
+                t.style.color = '#FFD700'; // ทอง
+                t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.3)';
+            } 
+            else if(color === 'gold') {
+                c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
+                c.style.border = '4px solid #D90000'; // ขอบแดง
+                t.style.color = '#8A0000'; // 🔥 แดงเข้ม (บังคับ!) 🔥
+                t.style.textShadow = 'none'; // เอาเงาออกจะได้อ่านง่าย
+            } 
+            else if(color === 'black') {
+                c.style.background = '#000'; 
+                c.style.border = '4px solid #FFD700'; // ขอบทอง
+                t.style.color = '#FFD700'; // ทอง
+            } 
+            else if(color === 'white') {
+                c.style.background = '#fff'; 
+                c.style.border = '4px solid #D90000'; // ขอบแดง
+                t.style.color = '#D90000'; // แดง
+            }
             
-            // ใส่ข้อความ
             t.innerHTML = blessings[color];
         }
 
