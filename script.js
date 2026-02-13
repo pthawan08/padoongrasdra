@@ -95,43 +95,44 @@ function setupPreview() {
     window.applyFrame('red');
 }
 
-// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (ปรับปรุงใหม่ตามที่ขอ) 🔥
+// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (แก้บั๊กสีไม่เปลี่ยน) 🔥
 window.applyFrame = function(color) {
     const container = document.getElementById('preview-container');
     const textDiv = document.getElementById('final-blessing');
     
-    // 1. ล้างค่าเก่า
+    // 1. ล้างค่าเก่าทิ้งให้หมดก่อน (สำคัญมาก!)
     container.style.background = 'none'; 
+    container.style.backgroundImage = 'none';
     container.style.backgroundColor = 'transparent';
     container.style.border = 'none';
 
-    // 2. ตั้งค่าใหม่ (กรอบชั้นเดียว + สีตัวอักษร)
+    // 2. ตั้งค่าใหม่
     if(color === 'red') {
-        // แดง: พื้นแดงไล่เฉด, ขอบทอง, ตัวหนังสือทอง
+        // พื้นแดงไล่เฉด, ขอบทอง
         container.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
         container.style.border = '4px solid #FFD700'; 
         textDiv.style.color = '#FFD700'; 
     } 
     else if(color === 'gold') {
-        // ทอง: พื้นทองไล่เฉด, ขอบแดง, ตัวหนังสือแดงเข้ม (อ่านง่าย)
+        // พื้นทองไล่เฉด, ขอบแดง
         container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
         container.style.border = '4px solid #D90000';
-        textDiv.style.color = '#8A0000';
+        textDiv.style.color = '#8A0000'; // ตัวหนังสือสีเข้ม
     } 
     else if(color === 'black') {
-        // ดำ: พื้นดำ, ขอบทอง, ตัวหนังสือทอง
+        // พื้นดำล้วน, ขอบทอง
         container.style.backgroundColor = '#1a1a1a';
         container.style.border = '4px solid #FFD700';
         textDiv.style.color = '#FFD700';
     } 
     else if(color === 'white') {
-        // ขาว: พื้นขาว, ขอบแดง, ตัวหนังสือแดง
+        // พื้นขาวล้วน, ขอบแดง
         container.style.backgroundColor = '#ffffff';
         container.style.border = '4px solid #D90000';
         textDiv.style.color = '#D90000';
     }
     
-    // 3. ใส่ข้อความ (Render HTML เพื่อให้ <br> ทำงาน)
+    // 3. ใส่ข้อความ
     textDiv.innerHTML = blessings[color];
 }
 
