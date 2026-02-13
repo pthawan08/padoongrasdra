@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth PRS </title>
+    <title>CNY Photo Booth (Final V2)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CNY Color Palette --- */
+        /* --- ตั้งค่าสี --- */
         :root {
             --cny-red: #D90000;       
             --cny-dark-red: #8A0000;  
             --cny-gold: #FFD700;      
-            --cny-gold-dark: #DAA520; 
             --cny-bg: #FFFCE0;        
         }
 
@@ -40,210 +39,151 @@
 
         h1 {
             color: var(--cny-red);
-            margin-bottom: 10px;
             font-weight: 800;
-            text-shadow: 2px 2px 0 var(--cny-gold-dark);
-        }
-        h2 { color: var(--cny-red); }
-
-        /* --- Layout Selector --- */
-        .layout-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 25px;
+            text-shadow: 2px 2px 0 #DAA520;
+            margin-bottom: 5px;
         }
 
-        .layout-btn {
-            background: #fff;
-            border: 3px solid var(--cny-red);
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(217, 0, 0, 0.1);
-        }
-
-        .layout-btn:hover {
-            border-color: var(--cny-gold);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(217, 0, 0, 0.2);
-        }
-
-        .layout-btn span {
-            font-weight: bold;
-            color: var(--cny-red);
-            font-size: 0.9rem;
-        }
-
-        /* Icons */
-        [class^="icon-"] { border-color: var(--cny-red); transition: 0.3s; }
-        [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); }
-
-        .layout-btn:hover [class^="icon-"], 
-        .layout-btn:hover [class^="icon-"]::before, 
-        .layout-btn:hover [class^="icon-"]::after, 
-        .layout-btn:hover .icon-grid-2x2 div { 
-            border-color: var(--cny-gold); 
-        }
-
-        .icon-strip-2 { width: 30px; height: 40px; border: 2px solid; display: flex; flex-direction: column; }
-        .icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid; }
-        .icon-strip-3 { width: 30px; height: 45px; border: 2px solid; display: flex; flex-direction: column; }
-        .icon-strip-3::before, .icon-strip-3::after { content:''; flex:1; border-bottom: 1px solid; }
-        .icon-strip-4 { width: 30px; height: 50px; border: 2px solid; display: flex; flex-direction: column; } 
-        .icon-strip-4::before { content:''; flex:1; border-bottom: 1px solid; } .icon-strip-4::after { content:''; flex:1; border-top: 1px solid; }
-        .icon-grid-2x2 { width: 40px; height: 40px; border: 2px solid; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-        .icon-grid-2x2 div { border: 1px solid; }
-
-        /* --- Camera Section --- */
-        .camera-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 133.33%;
-            background: #000;
-            border-radius: 12px;
-            /* ❌ ลบขอบทองออกแล้วครับ */
-            overflow: hidden;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        #countdown {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 7rem; color: var(--cny-gold);
-            font-weight: 800;
-            text-shadow: 3px 3px 0 var(--cny-red);
-            display: none;
-        }
-        #status-text { color: var(--cny-red); font-weight: bold; margin-bottom: 10px; }
-
-        /* --- Preview Frame --- */
+        /* --- กรอบพรีวิว (Preview Frame) --- */
         .frame-container {
             padding: 20px;
-            /* ❌ ไม่มีสี ไม่มีขอบ รอ JS ใส่ให้ */
+            /* เริ่มต้นไม่มีสี รอ JS ใส่ */
             background: transparent; 
-            border-radius: 8px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); /* เงาฟุ้งๆ สวยๆ */
             margin-bottom: 20px;
             transition: all 0.3s ease;
+            /* ตัดขอบเหลืองทิ้งถาวร */
+            border: none !important; 
         }
 
-        .photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; border-radius: 2px; }
+        .photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; }
 
-        /* Grid Configs */
+        /* Grid Layouts */
         .grid-strip2 { grid-template-columns: 1fr; }
         .grid-strip3 { grid-template-columns: 1fr; }
         .grid-strip4 { grid-template-columns: 1fr; }
         .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
 
-        .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; border: 1px solid #ddd; }
+        .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; }
         .grid-strip2 .photo-slot, .grid-strip3 .photo-slot, .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
         .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
+        /* ข้อความคำอวยพร */
         .blessing-text {
-            margin-top: 15px; font-size: 1.2rem;
-            color: var(--cny-gold);
-            font-weight: bold; font-family: 'Kanit';
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-top: 15px; font-size: 1.3rem;
+            font-weight: 800; font-family: 'Kanit';
             line-height: 1.5; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
-        /* --- Controls & Buttons --- */
+        /* --- ปุ่มเลือก Layout --- */
+        .layout-selector {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
+        }
+        .layout-btn {
+            background: #fff; border: 2px solid var(--cny-red);
+            border-radius: 10px; padding: 10px; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .layout-btn span { color: var(--cny-red); font-weight: bold; font-size: 0.8rem; }
+        /* Icons */
+        [class^="icon-"] { border-color: var(--cny-red); }
+        [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); }
+        .icon-strip-2 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
+        .icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid; }
+        .icon-strip-3 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
+        .icon-strip-3::before, .icon-strip-3::after { content:''; flex:1; border-bottom: 1px solid; }
+        .icon-strip-4 { width: 20px; height: 35px; border: 2px solid; display: flex; flex-direction: column; } 
+        .icon-strip-4::before { content:''; flex:1; border-bottom: 1px solid; } .icon-strip-4::after { content:''; flex:1; border-top: 1px solid; }
+        .icon-grid-2x2 { width: 30px; height: 30px; border: 2px solid; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .icon-grid-2x2 div { border: 1px solid; }
+
+        /* --- ปุ่มเลือกสี (วงกลม) --- */
         .color-options { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
         .color-btn {
-            width: 45px; height: 45px; border-radius: 50%;
+            width: 50px; height: 50px; border-radius: 50%;
             border: 3px solid #fff; cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: 0.2s;
         }
-        .color-btn:hover { transform: scale(1.15); }
-        .color-btn.black { background: #1a1a1a; } 
+        .color-btn:hover { transform: scale(1.1); }
+        .color-btn.black { background: #000; } 
         .color-btn.white { background: #fff; border-color: #ccc; }
         .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
         .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-        #blessing-display { display: none; } 
-
-        /* 🔥 ปุ่มซองอั่งเปา (Ang Pao Style) 🔥 */
+        /* --- 🔥 ปุ่มซองอั่งเปา (บังคับแสดงผลด้วย !important) 🔥 --- */
         .btn-primary {
-            /* ไล่สีแดงสด ไปแดงเลือดหมู */
-            background: linear-gradient(180deg, #E60000 0%, #B30000 100%);
-            color: #FFD700; /* ตัวหนังสือสีทอง */
-            border: 2px solid #FFD700; /* ขอบปุ่มสีทอง */
-            padding: 14px 20px;
+            background: linear-gradient(180deg, #E60000 0%, #B30000 100%) !important;
+            color: #FFD700 !important;
+            border: 2px solid #FFD700 !important;
+            padding: 15px 20px;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
             display: inline-block;
             box-sizing: border-box;
             margin-top: 15px;
             text-decoration: none;
-            /* เงาปุ่มหนาๆ สีแดงเลือดหมู */
-            box-shadow: 0 5px 0 #800000, 0 10px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 0 #800000, 0 15px 20px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+            position: relative; top: 0;
             transition: all 0.1s;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
         }
-
         .btn-primary:active {
-            transform: translateY(4px); /* เวลากดปุ่มจะยุบลง */
-            box-shadow: 0 1px 0 #800000, 0 2px 5px rgba(0,0,0,0.2);
+            top: 6px;
+            box-shadow: 0 0 0 #800000, 0 5px 10px rgba(0,0,0,0.2);
         }
-
         .btn-primary:disabled {
-            background: #ccc; border-color: #999; color: #666;
-            box-shadow: none; transform: none;
+            background: #ccc !important; border-color: #999 !important; color: #666 !important;
+            box-shadow: none !important; top: 0 !important;
         }
 
         .btn-secondary {
             background: transparent; border: none;
-            color: var(--cny-dark-red);
-            margin-top: 15px; cursor: pointer;
+            color: var(--cny-dark-red); margin-top: 15px; cursor: pointer;
             text-decoration: underline; font-weight: bold;
         }
 
-        /* --- Result Page --- */
+        /* --- จอกล้อง --- */
+        .camera-wrapper {
+            position: relative; width: 100%; padding-bottom: 133.33%;
+            background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px;
+        }
+        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #countdown {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 8rem; color: #FFD700; font-weight: 900;
+            text-shadow: 4px 4px 0 #D90000; display: none;
+        }
+
+        /* Result */
         #qrcode-area {
             background: #fff; padding: 15px; border-radius: 10px;
             display: inline-block; margin-bottom: 15px;
-            border: 2px solid var(--cny-red);
+            border: 4px solid var(--cny-red);
         }
         #final-image-show img {
             width: 100%; border-radius: 8px; margin-bottom: 10px;
-            border: 3px solid var(--cny-gold);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 4px solid var(--cny-gold);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Ver 2.0 (New Frame Update)</div>
+
         <section id="step-welcome" class="active">
             <h1>🧧 Chinese New Year 🧧</h1>
             <p>เลือกรูปแบบเฟรมที่คุณต้องการ</p>
-            
             <div class="layout-selector">
-                <button class="layout-btn" onclick="selectLayout('strip2')">
-                    <div class="icon-strip-2"></div>
-                    <span>2 ช่อง (ตั้ง)</span>
-                </button>
-                <button class="layout-btn" onclick="selectLayout('strip3')">
-                    <div class="icon-strip-3"></div>
-                    <span>3 ช่อง (ตั้ง)</span>
-                </button>
-                <button class="layout-btn" onclick="selectLayout('strip4')">
-                    <div class="icon-strip-4"></div>
-                    <span>4 ช่อง (ตั้ง)</span>
-                </button>
-                <button class="layout-btn" onclick="selectLayout('grid2x2')">
-                    <div class="icon-grid-2x2"></div>
-                    <span>4 ช่อง (จัตุรัส)</span>
-                </button>
+                <button class="layout-btn" onclick="selectLayout('strip2')"><div class="icon-strip-2"></div><span>2 ช่อง (ตั้ง)</span></button>
+                <button class="layout-btn" onclick="selectLayout('strip3')"><div class="icon-strip-3"></div><span>3 ช่อง (ตั้ง)</span></button>
+                <button class="layout-btn" onclick="selectLayout('strip4')"><div class="icon-strip-4"></div><span>4 ช่อง (ตั้ง)</span></button>
+                <button class="layout-btn" onclick="selectLayout('grid2x2')"><div class="icon-grid-2x2"></div><span>4 ช่อง (จัตุรัส)</span></button>
             </div>
         </section>
 
@@ -252,7 +192,7 @@
                 <video id="video" autoplay playsinline></video>
                 <div id="countdown"></div>
             </div>
-            <p id="status-text">เตรียมตัว...</p>
+            <p id="status-text" style="font-weight: bold; color: #D90000;">เตรียมตัว...</p>
         </section>
 
         <section id="step-edit" class="hidden">
@@ -278,7 +218,7 @@
             <h2>🧧 รูปของคุณมาแล้ว!</h2>
             <div id="qrcode-area">
                 <div id="qrcode"></div>
-                <p class="small-text">สแกนเพื่อรับรูปต้นฉบับ</p>
+                <p style="margin:0; font-size:0.9rem; font-weight:bold;">สแกนเพื่อรับรูป</p>
             </div>
             <div id="final-image-show"></div>
             <a id="download-link" class="btn-primary">ดาวน์โหลดรูปภาพ</a>
@@ -290,7 +230,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <script>
-        /* --- ตัวแปรและการตั้งค่า --- */
         let currentStep = 1;
         let photos = [];
         let stream = null;
@@ -304,169 +243,123 @@
             'grid2x2': { count: 4, class: 'grid-2x2' }
         };
 
-        const blessings = {
+       const blessings = {
     black: "新年快乐，恭喜发财！<br>สวัดีปีใหม่  ขอให้ร่ำรวย",
     white: "学业进步，马到成功！<br>การเรียนก้าวหน้าและประสบความสำเร็จ",
     gold: "新年快乐，万事如意！<br>สวัสดีปีใหม่  สมปรารถนาทุกประการ",
     red: "顺顺利利，好运连连！<br>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี"
 };
 
-        /* --- Main Functions --- */
         function selectLayout(type) {
-            currentLayout = type;
-            shotsNeeded = layouts[type].count;
-            startCamera();
+            currentLayout = type; shotsNeeded = layouts[type].count; startCamera();
         }
 
         async function startCamera() {
-            document.querySelectorAll('section').forEach(s => {
-                s.classList.add('hidden'); s.classList.remove('active');
-            });
+            document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-camera').classList.add('active');
-
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user", aspectRatio: 4/3 }, 
-                    audio: false 
-                });
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", aspectRatio: 4/3 }, audio: false });
                 document.getElementById('video').srcObject = stream;
                 startCountdownSequence();
-            } catch (e) { 
-                alert("ขออภัย ไม่สามารถเปิดกล้องได้: " + e.message); 
-                location.reload();
-            }
+            } catch (e) { alert("Error opening camera: " + e.message); location.reload(); }
         }
 
         async function startCountdownSequence() {
             photos = [];
-            const statusText = document.getElementById('status-text');
-            const countdownEl = document.getElementById('countdown');
-
+            const cd = document.getElementById('countdown');
             for (let i = 1; i <= shotsNeeded; i++) {
-                statusText.innerText = `รูปที่ ${i} / ${shotsNeeded}`;
-                await new Promise(resolve => {
-                    let c = 3;
-                    countdownEl.innerText = c;
-                    countdownEl.style.display = 'block';
-                    const timer = setInterval(() => {
-                        c--;
-                        if(c > 0) countdownEl.innerText = c;
-                        else { clearInterval(timer); countdownEl.innerText = "📸"; resolve(); }
-                    }, 1000);
+                document.getElementById('status-text').innerText = `รูปที่ ${i} / ${shotsNeeded}`;
+                await new Promise(r => {
+                    let c = 3; cd.innerText = c; cd.style.display = 'block';
+                    const t = setInterval(() => { c--; if(c>0) cd.innerText=c; else { clearInterval(t); cd.innerText="📸"; r(); } }, 1000);
                 });
-                capture();
-                countdownEl.style.display = 'none';
+                capture(); cd.style.display = 'none';
                 if (i < shotsNeeded) await new Promise(r => setTimeout(r, 800));
             }
             if(stream) stream.getTracks().forEach(t => t.stop());
             setupPreview();
-            
-            document.querySelectorAll('section').forEach(s => {
-                s.classList.add('hidden'); s.classList.remove('active');
-            });
+            document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-edit').classList.add('active');
         }
 
         function capture() {
-            const video = document.getElementById('video');
-            const cvs = document.createElement('canvas');
-            cvs.width = video.videoWidth; 
-            cvs.height = video.videoHeight;
-            const ctx = cvs.getContext('2d');
-            ctx.translate(cvs.width, 0); ctx.scale(-1, 1);
-            ctx.drawImage(video, 0, 0, cvs.width, cvs.height);
-            photos.push(cvs.toDataURL('image/png'));
+            const v = document.getElementById('video');
+            const c = document.createElement('canvas');
+            c.width = v.videoWidth; c.height = v.videoHeight;
+            const ctx = c.getContext('2d');
+            ctx.translate(c.width, 0); ctx.scale(-1, 1);
+            ctx.drawImage(v, 0, 0);
+            photos.push(c.toDataURL('image/png'));
         }
 
         function setupPreview() {
             const grid = document.getElementById('photo-grid');
             grid.className = 'photo-grid ' + layouts[currentLayout].class; 
             grid.innerHTML = '';
-            photos.forEach(imgSrc => {
-                const div = document.createElement('div');
-                div.className = 'photo-slot';
-                div.style.backgroundImage = `url(${imgSrc})`; 
-                grid.appendChild(div);
+            photos.forEach(src => {
+                const d = document.createElement('div');
+                d.className = 'photo-slot'; d.style.backgroundImage = `url(${src})`;
+                grid.appendChild(d);
             });
             applyFrame('red');
         }
 
-        // 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (ฉบับแก้ขาด) 🔥
+        // 🔥 แก้เรื่องสีกรอบตรงนี้ (ลบสีทองทิ้ง!) 🔥
         function applyFrame(color) {
-            const container = document.getElementById('preview-container');
-            const textDiv = document.getElementById('final-blessing');
+            const c = document.getElementById('preview-container');
+            const t = document.getElementById('final-blessing');
             
-            // ล้างค่าเก่าทั้งหมด
-            container.style.cssText = ''; 
-            container.className = 'frame-container'; // รีเซ็ตคลาส
+            c.style.cssText = ''; // ล้างค่าเก่า
+            c.className = 'frame-container';
 
             if(color === 'red') {
-                container.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
-                container.style.border = '4px solid #FFD700'; 
-                textDiv.style.color = '#FFD700'; 
+                c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
+                // ❌ ไม่ใส่ border แล้ว (หรือถ้าจะใส่ให้ใส่สีเดียวกับพื้นหลัง)
+                c.style.border = '4px solid #D90000'; 
+                t.style.color = '#FFD700'; 
             } 
             else if(color === 'gold') {
-                container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-                container.style.border = '4px solid #D90000';
-                textDiv.style.color = '#8A0000'; 
+                c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
+                c.style.border = '4px solid #D90000'; // อันนี้ตัดขอบแดงสวย
+                t.style.color = '#8A0000'; 
             } 
             else if(color === 'black') {
-                container.style.background = '#1a1a1a'; // สีทึบ
-                container.style.border = '4px solid #FFD700';
-                textDiv.style.color = '#FFD700';
+                c.style.background = '#000'; 
+                c.style.border = '4px solid #000'; // ขอบดำกลืนไปเลย
+                t.style.color = '#FFD700';
             } 
             else if(color === 'white') {
-                container.style.background = '#ffffff'; // สีทึบ
-                container.style.border = '4px solid #D90000';
-                textDiv.style.color = '#D90000';
+                c.style.background = '#fff'; 
+                c.style.border = '4px solid #fff'; // ขอบขาวกลืนไปเลย
+                t.style.color = '#D90000';
             }
-            
-            textDiv.innerHTML = blessings[color];
+            t.innerHTML = blessings[color];
         }
 
         function uploadAndGenerate() {
             const btn = document.getElementById('save-btn');
-            const originalText = btn.innerText;
-            btn.innerText = "กำลังสร้างรูป... ⏳";
-            btn.disabled = true;
-
-            const element = document.getElementById('preview-container');
-            html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
+            const oldText = btn.innerText;
+            btn.innerText = "กำลังสร้างรูป... ⏳"; btn.disabled = true;
+            html2canvas(document.getElementById('preview-container'), { scale: 3 }).then(canvas => {
                 canvas.toBlob(async (blob) => {
-                    if (!blob) { alert("Error"); btn.disabled = false; return; }
                     try {
-                        const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, {
-                            method: 'POST', body: blob
-                        });
-                        if(!res.ok) throw new Error('Upload Failed');
+                        const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, { method: 'POST', body: blob });
+                        if(!res.ok) throw new Error('Fail');
                         const data = await res.json();
-                        showResult(data.url);
-                    } catch (err) {
-                        alert("Upload failed: " + err.message);
-                        btn.innerText = originalText;
-                        btn.disabled = false;
+                        
+                        document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
+                        document.getElementById('step-result').classList.add('active');
+                        
+                        document.getElementById('final-image-show').innerHTML = `<img src="${data.url}">`;
+                        const link = document.getElementById('download-link');
+                        link.href = data.url; link.download = `cny.png`;
+                        
+                        document.getElementById("qrcode").innerHTML = "";
+                        new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
+                    } catch (e) { 
+                        alert("Upload failed"); btn.innerText = oldText; btn.disabled = false; 
                     }
-                }, 'image/png', 0.95);
-            });
-        }
-
-        function showResult(url) {
-            document.querySelectorAll('section').forEach(s => {
-                s.classList.add('hidden'); s.classList.remove('active');
-            });
-            document.getElementById('step-result').classList.add('active');
-
-            document.getElementById('final-image-show').innerHTML = `<img src="${url}" alt="Result">`;
-            const link = document.getElementById('download-link');
-            link.href = url;
-            link.download = `cny-${Date.now()}.png`;
-
-            const qrContainer = document.getElementById("qrcode");
-            qrContainer.innerHTML = "";
-            new QRCode(qrContainer, {
-                text: url, width: 160, height: 160,
-                colorDark : "#D90000", colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.L
+                }, 'image/png');
             });
         }
     </script>
