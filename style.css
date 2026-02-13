@@ -3,57 +3,64 @@ body { font-family: 'Kanit', sans-serif; background: var(--bg); margin: 0; text-
 .container { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
 .hidden { display: none !important; }
 .active { display: block !important; }
-h1 { color: var(--red); }
+h1 { color: var(--red); margin-bottom: 10px; }
 
 /* Layout Selector Buttons */
 .layout-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
 .layout-btn { background: white; border: 2px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.2s; }
 .layout-btn:hover { border-color: var(--red); transform: translateY(-3px); }
-.layout-btn span { font-weight: bold; color: #555; }
+.layout-btn span { font-weight: bold; color: #555; font-size: 0.9rem; }
 
-/* Icons for layouts (CSS drawing) */
+/* Icons (วาดด้วย CSS) */
+.icon-strip-2 { width: 30px; height: 40px; border: 2px solid #333; display: flex; flex-direction: column; }
+.icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid #333; }
+
 .icon-strip-3 { width: 30px; height: 45px; border: 2px solid #333; display: flex; flex-direction: column; }
 .icon-strip-3::before, .icon-strip-3::after { content:''; flex:1; border-bottom: 1px solid #333; }
+
 .icon-strip-4 { width: 30px; height: 50px; border: 2px solid #333; display: flex; flex-direction: column; } 
 .icon-strip-4::before { content:''; flex:1; border-bottom: 1px solid #333; }
+.icon-strip-4::after { content:''; flex:1; border-top: 1px solid #333; } /* แก้ให้เส้นครบ 4 ช่อง */
+
 .icon-grid-2x2 { width: 40px; height: 40px; border: 2px solid #333; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
 .icon-grid-2x2 div { border: 1px solid #333; }
-.icon-grid-3x3 { width: 40px; height: 40px; border: 2px solid #333; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
 
-/* Camera - Fix Aspect Ratio */
-.camera-wrapper { position: relative; width: 100%; height: 0; padding-bottom: 133.33%; /* 4:3 Aspect Ratio */ background: #000; overflow: hidden; border-radius: 12px; margin-bottom: 15px; }
-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; /* สำคัญ! ห้ามบีบรูป */ transform: scaleX(-1); }
-#countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6rem; color: #fff; font-weight: bold; text-shadow: 0 0 15px #000; }
+/* Camera */
+.camera-wrapper { position: relative; width: 100%; padding-bottom: 133.33%; background: #000; overflow: hidden; border-radius: 12px; margin-bottom: 15px; }
+video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+#countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6rem; color: #fff; font-weight: bold; text-shadow: 0 0 15px #000; display: none; }
 
 /* Frame & Grid System */
 .frame-container { padding: 20px; background: var(--red); transition: background 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
 .photo-grid { display: grid; gap: 10px; background: white; padding: 10px; }
 
-/* Grid Configurations */
-.grid-strip3 { grid-template-columns: 1fr; } /* 1 แถวตั้ง */
-.grid-strip4 { grid-template-columns: 1fr; } 
-.grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; } /* 2x2 จัตุรัส */
-.grid-3x3 { grid-template-columns: 1fr 1fr 1fr; aspect-ratio: 1/1; } /* 3x3 จัตุรัส */
+/* Configs for Grids */
+.grid-strip2 { grid-template-columns: 1fr; } /* 2 รูปแนวตั้ง */
+.grid-strip3 { grid-template-columns: 1fr; } /* 3 รูปแนวตั้ง */
+.grid-strip4 { grid-template-columns: 1fr; } /* 4 รูปแนวตั้ง */
+.grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; } /* 4 รูปสี่เหลี่ยม */
 
-/* Photo Slot - Fix Distortion */
+/* Photo Slots */
 .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; border: 1px solid #ddd; }
+.grid-strip2 .photo-slot { aspect-ratio: 4/3; }
 .grid-strip3 .photo-slot { aspect-ratio: 4/3; }
 .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
 .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
-.grid-3x3 .photo-slot { aspect-ratio: 1/1; }
 
-.blessing-text { margin-top: 15px; font-size: 1.2rem; color: #fff; font-weight: bold; font-family: 'Kanit'; }
+.blessing-text { margin-top: 15px; font-size: 1.2rem; color: #fff; font-weight: bold; font-family: 'Kanit'; line-height: 1.4; }
 
-/* Controls */
+/* UI Controls */
 .color-options { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
 .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); cursor: pointer; }
-.color-btn.black { background: #000; } .color-btn.white { background: #fff; }
+.color-btn.black { background: #1a1a1a; } .color-btn.white { background: #fff; }
 .color-btn.gold { background: var(--gold); } .color-btn.red { background: var(--red); }
 
-.btn-primary { background: var(--red); color: white; border: none; padding: 12px 30px; border-radius: 30px; font-size: 1rem; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; box-sizing: border-box; margin-top: 10px;}
+.btn-primary { background: var(--red); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px; font-weight: 600; }
 .btn-primary:disabled { background: #ccc; cursor: wait; }
-.btn-secondary { background: transparent; border: none; color: #777; margin-top: 15px; cursor: pointer; text-decoration: underline; }
+.btn-secondary { background: transparent; border: none; color: #888; margin-top: 10px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
 
-/* QR Result */
-#final-image-show img { width: 100%; border-radius: 10px; margin: 10px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-#qrcode { display: flex; justify-content: center; margin: 20px 0; background: white; padding: 10px; border-radius: 10px; display: inline-block; }
+/* Result Page */
+#qrcode-area { background: white; padding: 15px; border-radius: 15px; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+#qrcode { display: flex; justify-content: center; margin-bottom: 5px; }
+.small-text { font-size: 0.85rem; color: #666; margin: 0; }
+#final-image-show img { width: 100%; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
