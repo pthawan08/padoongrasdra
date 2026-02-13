@@ -95,40 +95,45 @@ function setupPreview() {
     window.applyFrame('red');
 }
 
-// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (แก้บั๊กสีไม่เปลี่ยน) 🔥
+// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (แก้ใหม่) 🔥
 window.applyFrame = function(color) {
     const container = document.getElementById('preview-container');
     const textDiv = document.getElementById('final-blessing');
     
-    // 1. ล้างค่าเก่าทิ้งให้หมดก่อน (สำคัญมาก!)
+    // 1. ล้างค่าเก่าทิ้งให้หมด (สำคัญมาก! เพื่อไม่ให้สีเหลือง/แดงค้าง)
     container.style.background = 'none'; 
     container.style.backgroundImage = 'none';
     container.style.backgroundColor = 'transparent';
-    container.style.border = 'none';
+    container.style.border = 'none'; 
+    container.style.boxShadow = 'none'; // ล้างเงาด้วยเผื่อมี
 
-    // 2. ตั้งค่าใหม่
+    // 2. ตั้งค่าใหม่ตามสีที่เลือก
     if(color === 'red') {
-        // พื้นแดงไล่เฉด, ขอบทอง
+        // แดง: พื้นแดงไล่เฉด, ขอบทอง
         container.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
         container.style.border = '4px solid #FFD700'; 
+        container.style.boxShadow = '0 10px 20px rgba(138, 0, 0, 0.4)';
         textDiv.style.color = '#FFD700'; 
     } 
     else if(color === 'gold') {
-        // พื้นทองไล่เฉด, ขอบแดง
+        // ทอง: พื้นทองไล่เฉด, ขอบแดง
         container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
         container.style.border = '4px solid #D90000';
-        textDiv.style.color = '#8A0000'; // ตัวหนังสือสีเข้ม
+        container.style.boxShadow = '0 10px 20px rgba(218, 165, 32, 0.4)';
+        textDiv.style.color = '#8A0000'; // ตัวหนังสือสีแดงเข้ม
     } 
     else if(color === 'black') {
-        // พื้นดำล้วน, ขอบทอง
+        // ดำ: พื้นดำล้วน, ขอบทอง
         container.style.backgroundColor = '#1a1a1a';
         container.style.border = '4px solid #FFD700';
+        container.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
         textDiv.style.color = '#FFD700';
     } 
     else if(color === 'white') {
-        // พื้นขาวล้วน, ขอบแดง
+        // ขาว: พื้นขาวล้วน, ขอบแดง
         container.style.backgroundColor = '#ffffff';
         container.style.border = '4px solid #D90000';
+        container.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
         textDiv.style.color = '#D90000';
     }
     
