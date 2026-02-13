@@ -1,10 +1,10 @@
-/* --- CNY Color Palette (ธีมตรุษจีน) --- */
+/* --- CNY Color Palette --- */
 :root {
-    --cny-red: #D90000;       /* แดงสด */
-    --cny-dark-red: #8A0000;  /* แดงเลือดหมู (เงา) */
-    --cny-gold: #FFD700;      /* ทองสว่าง */
-    --cny-gold-dark: #DAA520; /* ทองเข้ม */
-    --cny-bg: #FFFCE0;        /* พื้นหลังครีม */
+    --cny-red: #D90000;       
+    --cny-dark-red: #8A0000;  
+    --cny-gold: #FFD700;      
+    --cny-gold-dark: #DAA520; 
+    --cny-bg: #FFFCE0;        
 }
 
 body {
@@ -38,7 +38,7 @@ h1 {
 }
 h2 { color: var(--cny-red); }
 
-/* --- Layout Selector (ปุ่มเลือกเฟรม) --- */
+/* --- Layout Selector --- */
 .layout-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -72,7 +72,7 @@ h2 { color: var(--cny-red); }
     font-size: 0.9rem;
 }
 
-/* Icons (วาดด้วย CSS) */
+/* Icons */
 [class^="icon-"] { border-color: var(--cny-red); transition: 0.3s; }
 [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); }
 
@@ -99,7 +99,7 @@ h2 { color: var(--cny-red); }
     padding-bottom: 133.33%;
     background: #000;
     border-radius: 12px;
-    border: 4px solid var(--cny-gold); /* ขอบทองจอกล้อง */
+    border: 4px solid var(--cny-gold);
     overflow: hidden;
     margin-bottom: 15px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -117,10 +117,8 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
 /* --- Preview Frame --- */
 .frame-container {
     padding: 20px;
-    /* สีพื้นหลังเริ่มต้น (เดี๋ยว JS จะมาเปลี่ยน) */
+    /* เอา Border เริ่มต้นออก ให้ JS จัดการ */
     background: linear-gradient(135deg, var(--cny-red), var(--cny-dark-red)); 
-    border: 4px solid var(--cny-gold);
-    outline: 2px solid var(--cny-red);
     border-radius: 8px;
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
     margin-bottom: 20px;
@@ -141,7 +139,8 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
     margin-top: 15px; font-size: 1.2rem;
     color: var(--cny-gold);
     font-weight: bold; font-family: 'Kanit';
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    line-height: 1.5; /* เพิ่มระยะห่างบรรทัดนิดนึง */
 }
 
 /* --- Controls & Buttons --- */
@@ -157,12 +156,12 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
 .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
 .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-#blessing-display { display: none; } /* ซ่อนตัวนี้ไปเลย เพราะโชว์ในรูปแล้ว */
+#blessing-display { display: none; } 
 
-/* 🔥 ปุ่มซองอั่งเปา (Ang Pao Style) 🔥 */
+/* ปุ่มซองอั่งเปา */
 .btn-primary {
     background: linear-gradient(to bottom, #E60000 0%, #B30000 100%);
-    color: #FFD700; /* ตัวหนังสือทอง */
+    color: #FFD700;
     border: 2px solid #FFD700;
     padding: 14px 20px;
     border-radius: 50px;
@@ -174,14 +173,13 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
     box-sizing: border-box;
     margin-top: 15px;
     text-decoration: none;
-    /* เงาปุ่มแบบมีมิติ */
     box-shadow: 0 5px 0 #800000, 0 10px 10px rgba(0,0,0,0.2);
     transition: all 0.1s;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 }
 
 .btn-primary:active {
-    transform: translateY(4px); /* กดยุบลง */
+    transform: translateY(4px);
     box-shadow: 0 1px 0 #800000, 0 2px 5px rgba(0,0,0,0.2);
 }
 
