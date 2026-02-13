@@ -1,25 +1,22 @@
-/* --- CNY Color Palette --- */
+/* --- CNY Color Palette (ธีมตรุษจีน) --- */
 :root {
-    --cny-red: #C70000;       /* แดงสดแบบมงคล */
-    --cny-dark-red: #8A0000;  /* แดงเข้มสำหรับเงา */
+    --cny-red: #D90000;       /* แดงสด */
+    --cny-dark-red: #8A0000;  /* แดงเลือดหมู (เงา) */
     --cny-gold: #FFD700;      /* ทองสว่าง */
     --cny-gold-dark: #DAA520; /* ทองเข้ม */
-    --cny-bg: #FFFCE0;        /* พื้นหลังครีมๆ เหมือนกระดาษโบราณ */
-    --text-dark: #333333;
-    --text-cream: #FFFCE0;
+    --cny-bg: #FFFCE0;        /* พื้นหลังครีม */
 }
 
 body {
     font-family: 'Kanit', sans-serif;
     background-color: var(--cny-bg);
-    /* เพิ่มลายน้ำจางๆ (ถ้าชอบ) */
     background-image: radial-gradient(circle at 50% 50%, #fffce0 0%, #f7f2c5 100%);
     margin: 0;
     text-align: center;
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    color: var(--text-dark);
+    color: #333;
 }
 
 .container {
@@ -35,16 +32,13 @@ body {
 /* Typography */
 h1 {
     color: var(--cny-red);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-weight: 800;
-    font-size: 2.2rem;
-    /* เพิ่มเงาสีทองให้ดูอลังการ */
-    text-shadow: 2px 2px 0 var(--cny-gold-dark), -1px -1px 0 var(--cny-gold);
+    text-shadow: 2px 2px 0 var(--cny-gold-dark);
 }
 h2 { color: var(--cny-red); }
-p { font-weight: 500; }
 
-/* --- Layout Selector Buttons (หน้าแรก) --- */
+/* --- Layout Selector (ปุ่มเลือกเฟรม) --- */
 .layout-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -54,7 +48,6 @@ p { font-weight: 500; }
 
 .layout-btn {
     background: #fff;
-    /* ขอบแดง */
     border: 3px solid var(--cny-red);
     border-radius: 12px;
     padding: 15px;
@@ -63,31 +56,32 @@ p { font-weight: 500; }
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(199, 0, 0, 0.15);
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(217, 0, 0, 0.1);
 }
 
 .layout-btn:hover {
-    /* hover แล้วเปลี่ยนเป็นแดงขอบทอง */
-    background: var(--cny-red);
     border-color: var(--cny-gold);
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(199, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(217, 0, 0, 0.2);
 }
 
 .layout-btn span {
     font-weight: bold;
     color: var(--cny-red);
-    font-size: 0.95rem;
-    transition: color 0.3s;
+    font-size: 0.9rem;
 }
-.layout-btn:hover span { color: var(--cny-gold); }
 
-/* Icons (วาดด้วย CSS) - ปรับสีให้เข้าธีม */
-[class^="icon-"] { border-color: var(--cny-red); transition: border-color 0.3s; }
-[class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); transition: border-color 0.3s; }
-.layout-btn:hover [class^="icon-"] { border-color: var(--cny-gold); }
-.layout-btn:hover [class^="icon-"]::before, .layout-btn:hover [class^="icon-"]::after, .layout-btn:hover .icon-grid-2x2 div { border-color: var(--cny-gold); }
+/* Icons (วาดด้วย CSS) */
+[class^="icon-"] { border-color: var(--cny-red); transition: 0.3s; }
+[class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--cny-red); }
+
+.layout-btn:hover [class^="icon-"], 
+.layout-btn:hover [class^="icon-"]::before, 
+.layout-btn:hover [class^="icon-"]::after, 
+.layout-btn:hover .icon-grid-2x2 div { 
+    border-color: var(--cny-gold); 
+}
 
 .icon-strip-2 { width: 30px; height: 40px; border: 2px solid; display: flex; flex-direction: column; }
 .icon-strip-2::before { content:''; flex:1; border-bottom: 1px solid; }
@@ -104,117 +98,113 @@ p { font-weight: 500; }
     width: 100%;
     padding-bottom: 133.33%;
     background: #000;
+    border-radius: 12px;
+    border: 4px solid var(--cny-gold); /* ขอบทองจอกล้อง */
     overflow: hidden;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    /* เพิ่มขอบทองให้จอกล้อง */
-    border: 4px solid var(--cny-gold);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    margin-bottom: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 #countdown {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 7rem; color: var(--cny-gold); /* ตัวเลขสีทอง */
+    font-size: 7rem; color: var(--cny-gold);
     font-weight: 800;
-    text-shadow: 2px 2px 0 var(--cny-red), -2px -2px 0 var(--cny-red), 0 0 20px var(--cny-gold); /* ขอบแดง+เรืองแสง */
+    text-shadow: 3px 3px 0 var(--cny-red);
     display: none;
 }
-#status-text { font-size: 1.2rem; color: var(--cny-red); font-weight: bold; }
+#status-text { color: var(--cny-red); font-weight: bold; margin-bottom: 10px; }
 
-/* --- Preview Frame & Grid --- */
+/* --- Preview Frame --- */
 .frame-container {
     padding: 20px;
-    /* พื้นหลังแดง ไล่โทน */
-    background: linear-gradient(to bottom right, var(--cny-red), var(--cny-dark-red));
-    /* ขอบทองซ้อนแดงสุดหรู */
+    /* สีพื้นหลังเริ่มต้น (เดี๋ยว JS จะมาเปลี่ยน) */
+    background: linear-gradient(135deg, var(--cny-red), var(--cny-dark-red)); 
     border: 4px solid var(--cny-gold);
-    outline: 3px solid var(--cny-red);
+    outline: 2px solid var(--cny-red);
     border-radius: 8px;
-    box-shadow: 0 15px 30px rgba(138, 0, 0, 0.3);
-    margin-bottom: 25px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
 }
-.photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; border-radius: 4px;}
+.photo-grid { display: grid; gap: 10px; background: #fff; padding: 10px; border-radius: 2px; }
 
-/* Configs for Grids (เหมือนเดิม) */
+/* Grid Configs */
 .grid-strip2 { grid-template-columns: 1fr; }
 .grid-strip3 { grid-template-columns: 1fr; }
 .grid-strip4 { grid-template-columns: 1fr; }
 .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
 
-/* Photo Slots */
 .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; border: 1px solid #ddd; }
-.grid-strip2 .photo-slot { aspect-ratio: 4/3; }
-.grid-strip3 .photo-slot { aspect-ratio: 4/3; }
-.grid-strip4 .photo-slot { aspect-ratio: 4/3; }
+.grid-strip2 .photo-slot, .grid-strip3 .photo-slot, .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
 .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
 .blessing-text {
-    margin-top: 15px; font-size: 1.3rem;
-    color: var(--cny-gold); /* คำอวยพรสีทอง */
-    font-weight: bold; font-family: 'Kanit'; line-height: 1.4;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    margin-top: 15px; font-size: 1.2rem;
+    color: var(--cny-gold);
+    font-weight: bold; font-family: 'Kanit';
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-/* --- UI Controls & Buttons --- */
-.color-options { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+/* --- Controls & Buttons --- */
+.color-options { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
 .color-btn {
     width: 45px; height: 45px; border-radius: 50%;
-    border: 3px solid rgba(255,255,255,0.5); cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.2s;
+    border: 3px solid #fff; cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: 0.2s;
 }
-.color-btn:hover { transform: scale(1.1); }
-.color-btn.black { background: #1a1a1a; } .color-btn.white { background: #fff; }
-.color-btn.gold { background: linear-gradient(45deg, var(--cny-gold), var(--cny-gold-dark)); }
-.color-btn.red { background: linear-gradient(45deg, var(--cny-red), var(--cny-dark-red)); }
+.color-btn:hover { transform: scale(1.15); }
+.color-btn.black { background: #1a1a1a; } 
+.color-btn.white { background: #fff; border-color: #ccc; }
+.color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
+.color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-#blessing-display { color: var(--cny-red); font-weight: bold; font-size: 1.1rem; }
+#blessing-display { display: none; } /* ซ่อนตัวนี้ไปเลย เพราะโชว์ในรูปแล้ว */
 
-/* ปุ่มหลักสไตล์อั่งเปา */
+/* 🔥 ปุ่มซองอั่งเปา (Ang Pao Style) 🔥 */
 .btn-primary {
-    /* ไล่โทนแดง */
-    background: linear-gradient(to bottom, var(--cny-red), var(--cny-dark-red));
-    color: var(--cny-gold); /* ตัวหนังสือสีทอง */
-    border: 2px solid var(--cny-gold); /* ขอบทอง */
-    padding: 14px 25px;
+    background: linear-gradient(to bottom, #E60000 0%, #B30000 100%);
+    color: #FFD700; /* ตัวหนังสือทอง */
+    border: 2px solid #FFD700;
+    padding: 14px 20px;
     border-radius: 50px;
     font-size: 1.1rem;
-    cursor: pointer; text-decoration: none; display: inline-block; width: 100%; box-sizing: border-box; margin-top: 15px;
     font-weight: 700;
-    /* เงาแบบมีมิติ */
-    box-shadow: 0 4px 0 var(--cny-dark-red), 0 8px 15px rgba(0,0,0,0.2);
-    transition: all 0.15s;
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+    cursor: pointer;
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-top: 15px;
+    text-decoration: none;
+    /* เงาปุ่มแบบมีมิติ */
+    box-shadow: 0 5px 0 #800000, 0 10px 10px rgba(0,0,0,0.2);
+    transition: all 0.1s;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 }
 
-.btn-primary:hover {
-    transform: translateY(2px); /* กดแล้วยุบลง */
-    box-shadow: 0 2px 0 var(--cny-dark-red), 0 4px 8px rgba(0,0,0,0.2);
-    background: linear-gradient(to bottom, #d90000, var(--cny-red)); /* สว่างขึ้นนิดนึง */
+.btn-primary:active {
+    transform: translateY(4px); /* กดยุบลง */
+    box-shadow: 0 1px 0 #800000, 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .btn-primary:disabled {
-    background: #ccc; border-color: #aaa; color: #888;
-    box-shadow: none; transform: none; cursor: wait;
+    background: #ccc; border-color: #999; color: #666;
+    box-shadow: none; transform: none;
 }
 
 .btn-secondary {
-    background: transparent; border: none; color: var(--cny-red);
-    margin-top: 15px; cursor: pointer; text-decoration: underline;
-    font-size: 0.95rem; font-weight: 600;
+    background: transparent; border: none;
+    color: var(--cny-dark-red);
+    margin-top: 15px; cursor: pointer;
+    text-decoration: underline; font-weight: bold;
 }
 
 /* --- Result Page --- */
 #qrcode-area {
-    background: #fff; padding: 20px; border-radius: 15px;
-    display: inline-block; margin-bottom: 20px;
-    border: 3px solid var(--cny-red); /* กรอบแดงให้ QR */
-    box-shadow: 0 10px 20px rgba(199, 0, 0, 0.1);
+    background: #fff; padding: 15px; border-radius: 10px;
+    display: inline-block; margin-bottom: 15px;
+    border: 2px solid var(--cny-red);
 }
-#qrcode { display: flex; justify-content: center; margin-bottom: 10px; }
-.small-text { font-size: 0.9rem; color: var(--cny-red); font-weight: bold; margin: 0; }
-
 #final-image-show img {
-    width: 100%; border-radius: 12px; margin-bottom: 15px;
-    border: 3px solid var(--cny-gold); /* รูปผลลัพธ์มีขอบทอง */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%; border-radius: 8px; margin-bottom: 10px;
+    border: 3px solid var(--cny-gold);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
