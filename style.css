@@ -99,7 +99,7 @@ h2 { color: var(--cny-red); }
     padding-bottom: 133.33%;
     background: #000;
     border-radius: 12px;
-    border: 4px solid var(--cny-gold);
+    /* ❌ ลบขอบทองที่นี่ออกแล้วครับ */
     overflow: hidden;
     margin-bottom: 15px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -117,7 +117,7 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
 /* --- Preview Frame --- */
 .frame-container {
     padding: 20px;
-    /* ตั้งค่าเริ่มต้นให้ไม่มีสีพื้นหลัง (รอ JS ใส่ให้) เพื่อแก้ปัญหาเปลี่ยนสีไม่ได้ */
+    /* ❌ ลบขอบทองและพื้นหลังเริ่มต้นออก ให้ JS จัดการล้วนๆ */
     background: transparent; 
     border-radius: 8px;
     box-shadow: 0 15px 30px rgba(0,0,0,0.3);
@@ -160,11 +160,13 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
 
 #blessing-display { display: none; } 
 
-/* 🔥 ปุ่มซองอั่งเปา (Ang Pao Style) กลับมาแล้ว! 🔥 */
+/* 🔥🔥 ปุ่มซองอั่งเปา (Ang Pao Style) 🔥🔥 */
+/* ต้องก๊อปปี้ทับให้ครบทุกบรรทัดนะครับ */
 .btn-primary {
-    background: linear-gradient(to bottom, #E60000 0%, #B30000 100%);
-    color: #FFD700;
-    border: 2px solid #FFD700;
+    /* ไล่สีแดงสด ไปแดงเลือดหมู */
+    background: linear-gradient(180deg, #E60000 0%, #B30000 100%);
+    color: #FFD700; /* ตัวหนังสือสีทอง */
+    border: 2px solid #FFD700; /* ขอบปุ่มสีทอง */
     padding: 14px 20px;
     border-radius: 50px;
     font-size: 1.1rem;
@@ -175,14 +177,14 @@ video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-f
     box-sizing: border-box;
     margin-top: 15px;
     text-decoration: none;
-    /* เงาปุ่มแบบมีมิติ */
+    /* เงาปุ่มหนาๆ สีแดงเลือดหมู */
     box-shadow: 0 5px 0 #800000, 0 10px 10px rgba(0,0,0,0.2);
     transition: all 0.1s;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 }
 
 .btn-primary:active {
-    transform: translateY(4px); /* กดยุบลง */
+    transform: translateY(4px); /* เวลากดปุ่มจะยุบลง */
     box-shadow: 0 1px 0 #800000, 0 2px 5px rgba(0,0,0,0.2);
 }
 
