@@ -5,6 +5,7 @@ let stream = null;
 let currentLayout = 'strip3';
 let shotsNeeded = 3;
 
+// Layout Configs
 const layouts = {
     'strip2': { count: 2, class: 'grid-strip2' },
     'strip3': { count: 3, class: 'grid-strip3' },
@@ -12,11 +13,12 @@ const layouts = {
     'grid2x2': { count: 4, class: 'grid-2x2' }
 };
 
+// คำอวยพร (จีน <br> ไทย)
 const blessings = {
-    black: "新年快乐，恭喜发财！สวัดีปีใหม่  ขอให้ร่ำรวย",
-    white: "学业进步，马到成功！การเรียนก้าวหน้าและประสบความสำเร็จ",
-    gold: "新年快乐，万事如意！สวัสดีปีใหม่  สมปรารถนาทุกประการ",
-    red: "顺顺利利，好运连连！ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี"
+    black: "新年快乐，恭喜发财！<br>สวัดีปีใหม่  ขอให้ร่ำรวย",
+    white: "学业进步，马到成功！<br>การเรียนก้าวหน้าและประสบความสำเร็จ",
+    gold: "新年快乐，万事如意！<br>สวัสดีปีใหม่  สมปรารถนาทุกประการ",
+    red: "顺顺利利，好运连连！<br>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี"
 };
 
 /* --- Main Functions --- */
@@ -89,42 +91,48 @@ function setupPreview() {
         div.style.backgroundImage = `url(${imgSrc})`; 
         grid.appendChild(div);
     });
+    // เริ่มต้นด้วยสีแดง
     window.applyFrame('red');
 }
 
-// 🔥 ฟังก์ชันนี้แก้ใหม่ ล้าง Gradient ทิ้งให้เกลี้ยง 🔥
+// 🔥 ฟังก์ชันเปลี่ยนสีกรอบ (ปรับปรุงใหม่ตามที่ขอ) 🔥
 window.applyFrame = function(color) {
     const container = document.getElementById('preview-container');
     const textDiv = document.getElementById('final-blessing');
     
-    // 1. ล้างค่าพื้นหลังเก่าทิ้งให้หมดก่อน (สำคัญ!)
+    // 1. ล้างค่าเก่า
     container.style.background = 'none'; 
-    container.style.backgroundImage = 'none';
     container.style.backgroundColor = 'transparent';
+    container.style.border = 'none';
 
-    // 2. ใส่สีใหม่
+    // 2. ตั้งค่าใหม่ (กรอบชั้นเดียว + สีตัวอักษร)
     if(color === 'red') {
-        container.style.backgroundImage = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
-        container.style.borderColor = '#FFD700'; 
-        textDiv.style.color = '#FFD700';
+        // แดง: พื้นแดงไล่เฉด, ขอบทอง, ตัวหนังสือทอง
+        container.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
+        container.style.border = '4px solid #FFD700'; 
+        textDiv.style.color = '#FFD700'; 
     } 
     else if(color === 'gold') {
-        container.style.backgroundImage = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-        container.style.borderColor = '#D90000';
+        // ทอง: พื้นทองไล่เฉด, ขอบแดง, ตัวหนังสือแดงเข้ม (อ่านง่าย)
+        container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
+        container.style.border = '4px solid #D90000';
         textDiv.style.color = '#8A0000';
     } 
     else if(color === 'black') {
-        container.style.backgroundColor = '#1a1a1a'; // สีดำล้วน
-        container.style.borderColor = '#FFD700';
+        // ดำ: พื้นดำ, ขอบทอง, ตัวหนังสือทอง
+        container.style.backgroundColor = '#1a1a1a';
+        container.style.border = '4px solid #FFD700';
         textDiv.style.color = '#FFD700';
     } 
     else if(color === 'white') {
-        container.style.backgroundColor = '#ffffff'; // สีขาวล้วน
-        container.style.borderColor = '#D90000';
+        // ขาว: พื้นขาว, ขอบแดง, ตัวหนังสือแดง
+        container.style.backgroundColor = '#ffffff';
+        container.style.border = '4px solid #D90000';
         textDiv.style.color = '#D90000';
     }
     
-    textDiv.innerText = blessings[color];
+    // 3. ใส่ข้อความ (Render HTML เพื่อให้ <br> ทำงาน)
+    textDiv.innerHTML = blessings[color];
 }
 
 window.uploadAndGenerate = function() {
