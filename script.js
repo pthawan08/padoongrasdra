@@ -2,10 +2,9 @@
 let currentStep = 1;
 let photos = [];
 let stream = null;
-let currentLayout = 'strip3'; // ค่าเริ่มต้น
-let shotsNeeded = 3; // ค่าเริ่มต้น
+let currentLayout = 'strip3';
+let shotsNeeded = 3;
 
-// การตั้งค่า Layout
 const layouts = {
     'strip2': { count: 2, class: 'grid-strip2' },
     'strip3': { count: 3, class: 'grid-strip3' },
@@ -13,7 +12,6 @@ const layouts = {
     'grid2x2': { count: 4, class: 'grid-2x2' }
 };
 
-// คำอวยพรตามสี
 const blessings = {
     black: "🖤 อำนาจ บารมี มั่นคงดั่งภูผา",
     white: "🤍 จิตใจผ่องใส พบเจอแต่กัลยาณมิตร",
@@ -21,17 +19,13 @@ const blessings = {
     red: "❤️ รักรุ่ง งานพุ่ง เฮงตลอดปี!"
 };
 
-/* --- 1. ส่วนการทำงานหลัก --- */
-
-// ฟังก์ชันเลือก Layout แล้วเริ่มกล้อง
-function selectLayout(type) {
-    console.log("Selected Layout:", type); // เช็กใน Console ว่ากดติดไหม
+/* --- Main Functions --- */
+window.selectLayout = function(type) {
     currentLayout = type;
     shotsNeeded = layouts[type].count;
     startCamera();
 }
 
-// เปิดกล้อง
 async function startCamera() {
     switchStep(2);
     try {
@@ -42,13 +36,11 @@ async function startCamera() {
         document.getElementById('video').srcObject = stream;
         startCountdownSequence();
     } catch (e) { 
-        alert("ไม่สามารถเปิดกล้องได้: " + e.message); 
-        console.error(e);
+        alert("ขออภัย ไม่สามารถเปิดกล้องได้"); 
         location.reload();
     }
 }
 
-// นับถอยหลังและถ่ายรูป
 async function startCountdownSequence() {
     photos = [];
     const statusText = document.getElementById('status-text');
@@ -56,30 +48,19 @@ async function startCountdownSequence() {
 
     for (let i = 1; i <= shotsNeeded; i++) {
         statusText.innerText = `รูปที่ ${i} / ${shotsNeeded}`;
-        
         await new Promise(resolve => {
             let c = 3;
             countdownEl.innerText = c;
             countdownEl.style.display = 'block';
-            
             const timer = setInterval(() => {
                 c--;
-                if(c > 0) {
-                    countdownEl.innerText = c;
-                } else {
-                    clearInterval(timer);
-                    countdownEl.innerText = "📸";
-                    resolve();
-                }
+                if(c > 0) countdownEl.innerText = c;
+                else { clearInterval(timer); countdownEl.innerText = "📸"; resolve(); }
             }, 1000);
         });
-
         capture();
         countdownEl.style.display = 'none';
-        
-        if (i < shotsNeeded) {
-            await new Promise(r => setTimeout(r, 800));
-        }
+        if (i < shotsNeeded) await new Promise(r => setTimeout(r, 800));
     }
     
     if(stream) stream.getTracks().forEach(t => t.stop());
@@ -93,64 +74,60 @@ function capture() {
     cvs.width = video.videoWidth; 
     cvs.height = video.videoHeight;
     const ctx = cvs.getContext('2d');
-    ctx.translate(cvs.width, 0); 
-    ctx.scale(-1, 1);
+    ctx.translate(cvs.width, 0); ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, cvs.width, cvs.height);
     photos.push(cvs.toDataURL('image/png'));
 }
-
-/* --- 2. ส่วนการแต่งรูป --- */
 
 function setupPreview() {
     const grid = document.getElementById('photo-grid');
     grid.className = 'photo-grid ' + layouts[currentLayout].class; 
     grid.innerHTML = '';
-    
     photos.forEach(imgSrc => {
         const div = document.createElement('div');
         div.className = 'photo-slot';
         div.style.backgroundImage = `url(${imgSrc})`; 
         grid.appendChild(div);
     });
-    applyFrame('red');
+    window.applyFrame('red');
 }
 
-function applyFrame(color) {
+// 🔥 ฟังก์ชันนี้แก้ใหม่ ล้าง Gradient ทิ้งให้เกลี้ยง 🔥
+window.applyFrame = function(color) {
     const container = document.getElementById('preview-container');
     const textDiv = document.getElementById('final-blessing');
-    const display = document.getElementById('blessing-display');
     
-    container.style.background = '';
-    container.style.backgroundColor = '';
+    // 1. ล้างค่าพื้นหลังเก่าทิ้งให้หมดก่อน (สำคัญ!)
+    container.style.background = 'none'; 
+    container.style.backgroundImage = 'none';
+    container.style.backgroundColor = 'transparent';
 
+    // 2. ใส่สีใหม่
     if(color === 'red') {
-        container.style.background = 'linear-gradient(135deg, #C70000 0%, #8A0000 100%)';
+        container.style.backgroundImage = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
         container.style.borderColor = '#FFD700'; 
         textDiv.style.color = '#FFD700';
-    }
+    } 
     else if(color === 'gold') {
-        container.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-        container.style.borderColor = '#C70000';
+        container.style.backgroundImage = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
+        container.style.borderColor = '#D90000';
         textDiv.style.color = '#8A0000';
-    }
+    } 
     else if(color === 'black') {
-        container.style.backgroundColor = '#1a1a1a'; 
+        container.style.backgroundColor = '#1a1a1a'; // สีดำล้วน
         container.style.borderColor = '#FFD700';
         textDiv.style.color = '#FFD700';
-    }
+    } 
     else if(color === 'white') {
-        container.style.backgroundColor = '#ffffff';
-        container.style.borderColor = '#C70000';
-        textDiv.style.color = '#C70000';
+        container.style.backgroundColor = '#ffffff'; // สีขาวล้วน
+        container.style.borderColor = '#D90000';
+        textDiv.style.color = '#D90000';
     }
     
     textDiv.innerText = blessings[color];
-    display.innerText = blessings[color];
 }
 
-/* --- 3. ส่วนบันทึก --- */
-
-function uploadAndGenerate() {
+window.uploadAndGenerate = function() {
     const btn = document.getElementById('save-btn');
     const originalText = btn.innerText;
     btn.innerText = "กำลังสร้างรูป... ⏳";
@@ -160,12 +137,7 @@ function uploadAndGenerate() {
     
     html2canvas(element, { scale: 3, useCORS: true }).then(canvas => {
         canvas.toBlob(async (blob) => {
-            if (!blob) {
-                alert("เกิดข้อผิดพลาดในการสร้างไฟล์ภาพ");
-                btn.innerText = originalText;
-                btn.disabled = false;
-                return;
-            }
+            if (!blob) { alert("Error generating image"); btn.disabled = false; return; }
             try {
                 const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, {
                     method: 'POST', body: blob
@@ -174,8 +146,7 @@ function uploadAndGenerate() {
                 const data = await res.json();
                 showResult(data.url);
             } catch (err) {
-                console.error(err);
-                alert("เกิดข้อผิดพลาด: " + err.message);
+                alert("Upload failed: " + err.message);
                 btn.innerText = "ลองใหม่";
                 btn.disabled = false;
             }
@@ -185,21 +156,16 @@ function uploadAndGenerate() {
 
 function showResult(url) {
     switchStep(4);
-    const div = document.getElementById('final-image-show');
-    div.innerHTML = `<img src="${url}" alt="Result Photo">`;
-    
+    document.getElementById('final-image-show').innerHTML = `<img src="${url}" alt="Result">`;
     const link = document.getElementById('download-link');
     link.href = url;
-    link.download = `cny-booth-${Date.now()}.png`;
+    link.download = `cny-${Date.now()}.png`;
 
     const qrContainer = document.getElementById("qrcode");
     qrContainer.innerHTML = "";
     new QRCode(qrContainer, {
-        text: url,
-        width: 160,
-        height: 160,
-        colorDark : "#C70000",
-        colorLight : "#ffffff",
+        text: url, width: 160, height: 160,
+        colorDark : "#D90000", colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.L
     });
 }
