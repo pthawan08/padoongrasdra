@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V9.0)</title>
+    <title>CNY Photo Booth (V9.0 Custom Decor)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -18,7 +18,7 @@
         }
 
         body {
-            font-family: 'Mali', cursive; /* ใช้ฟอนต์น่ารักเป็นหลัก */
+            font-family: 'Mali', cursive;
             margin: 0;
             text-align: center;
             display: flex;
@@ -34,13 +34,13 @@
         .container {
             width: 100%;
             max-width: 500px;
-            padding: 25px;
+            padding: 20px;
             box-sizing: border-box;
             position: relative;
             z-index: 1;
         }
 
-        /* --- โคมไฟประดับฉากหลัง --- */
+        /* --- โคมไฟฉากหลัง --- */
         .lantern-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100px;
             pointer-events: none; z-index: 0; display: flex; justify-content: space-between;
@@ -61,22 +61,21 @@
         .hidden { display: none !important; }
         .active { display: block !important; }
 
-        /* --- หัวข้อ --- */
         h1 {
             font-family: 'Ma Shan Zheng', cursive;
-            color: var(--gold-main); font-size: 3.2rem; margin-bottom: 5px; margin-top: 10px;
+            color: var(--gold-main); font-size: 3rem; margin-bottom: 5px; margin-top: 10px;
             text-shadow: 3px 3px 0 #5e0000; letter-spacing: 2px;
         }
-        p { color: var(--cream); font-weight: 400; margin-top: 0; font-size: 1.1rem; }
+        p.subtitle { color: var(--cream); font-weight: 400; margin-top: 0; font-size: 1.1rem; }
 
-        /* --- กล่องขาวรองเนื้อหา --- */
         .content-box {
             background: var(--cream); border-radius: 15px; padding: 20px;
-            border: 4px solid var(--gold-dark); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid var(--gold-dark); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px;
         }
+        .box-title { margin:0 0 15px 0; font-weight:700; color:#333; font-size: 1.1rem; }
 
-        /* --- ปุ่มเลือก Layout --- */
-        .layout-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        /* --- Layout Selector --- */
+        .layout-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .layout-btn {
             background: #fff; border: 2px solid var(--red-light);
             border-radius: 8px; padding: 10px; cursor: pointer;
@@ -85,6 +84,7 @@
         .layout-btn:hover { background: #ffe6e6; transform: translateY(-3px); }
         .layout-btn span { color: var(--red-bg); font-weight: 700; font-size: 0.9rem; }
         
+        /* Icons */
         [class^="icon-"] { border-color: var(--red-bg); }
         [class^="icon-"]::before, [class^="icon-"]::after, .icon-grid-2x2 div { border-color: var(--red-bg); }
         .icon-strip-2 { width: 20px; height: 30px; border: 2px solid; display: flex; flex-direction: column; }
@@ -96,47 +96,57 @@
         .icon-grid-2x2 { width: 30px; height: 30px; border: 2px solid; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
         .icon-grid-2x2 div { border: 1px solid; }
 
-        /* --- กรอบพรีวิว & ของตกแต่ง (Decorations) --- */
+        /* --- 🔥 Emoji Selector (ใหม่) 🔥 --- */
+        .emoji-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;}
+        .emoji-btn {
+            font-size: 1.8rem; padding: 5px 10px; border: 2px solid #ddd; border-radius: 8px;
+            background: #fff; cursor: pointer; transition: all 0.2s;
+        }
+        .emoji-btn.active {
+            border-color: var(--red-bg); background: #ffe6e6; transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(217, 0, 0, 0.2);
+        }
+
+        /* --- Frame & Decorations --- */
         .frame-container {
-            padding: 30px 20px 25px 20px; /* เพิ่มขอบให้ของตกแต่ง */
+            padding: 35px 25px 25px 25px; /* พื้นที่สำหรับของตกแต่ง */
             background: transparent; border: none !important;
-            border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
-            position: relative;
+            border-radius: 4px; margin-bottom: 15px; position: relative;
         }
         
-        /* 🧧 ตำแหน่งของตกแต่ง 4 มุม 🧧 */
-        .decor {
-            position: absolute;
-            font-size: 2.5rem;
-            z-index: 10;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4));
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s ease; /* เพิ่ม effect ตอนเปลี่ยน */
+        /* Layer สำหรับวางของตกแต่งที่เลือก */
+        #decor-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 10;
         }
-        .decor-tl { top: -12px; left: -10px; transform: rotate(-15deg); } 
-        .decor-tr { top: -12px; right: -10px; transform: rotate(15deg); } 
-        .decor-bl { bottom: -12px; left: -10px; transform: rotate(-15deg); } 
-        .decor-br { bottom: -15px; right: -15px; transform: rotate(10deg); }
+        .decor-item {
+            position: absolute; font-size: 2.2rem;
+            filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.3));
+        }
+        /* ตำแหน่งต่างๆ รอบกรอบ */
+        .pos-tl { top: -5px; left: -5px; transform: rotate(-20deg); }
+        .pos-tr { top: -5px; right: -5px; transform: rotate(20deg); }
+        .pos-bl { bottom: -5px; left: -5px; transform: rotate(-15deg); }
+        .pos-br { bottom: -5px; right: -5px; transform: rotate(15deg); }
+        .pos-tm { top: -15px; left: 50%; transform: translateX(-50%); }
 
         .photo-grid { display: grid; gap: 8px; background: #fff; padding: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        
         .grid-strip2, .grid-strip3, .grid-strip4 { grid-template-columns: 1fr; }
         .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
         .photo-slot { width: 100%; background-color: #eee; background-size: cover; background-position: center; }
         .grid-strip2 .photo-slot, .grid-strip3 .photo-slot, .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
         .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
-        /* ข้อความคำอวยพร */
+        /* Blessing Text */
         .blessing-text { margin-top: 15px; line-height: 1.4; }
         .text-cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 1.8rem; display: block; margin-bottom: 5px; font-weight: bold; }
         .text-th { font-family: 'Mali', cursive; font-size: 1.1rem; font-weight: 700; display: block; }
 
-        /* --- ปุ่มเลือกสี --- */
-        .color-options { display: flex; justify-content: center; gap: 12px; margin: 10px 0 20px; }
+        /* Color & Buttons */
+        .color-options { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
         .color-btn {
-            width: 45px; height: 45px; border-radius: 50%;
-            border: 3px solid #fff; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 3px solid #fff; cursor: pointer; box-shadow: 0 3px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
         }
         .color-btn:hover { transform: scale(1.1); }
         .color-btn.black { background: #000; } 
@@ -144,64 +154,33 @@
         .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
         .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-        /* --- 🔥 ปุ่มเลือกของตกแต่ง (Decor Selection) 🔥 --- */
-        .decor-options { display: flex; justify-content: center; gap: 10px; margin: 10px 0 20px; flex-wrap: wrap; }
-        .decor-btn {
-            width: 45px; height: 45px; border-radius: 50%; border: 2px solid #eee;
-            background: #fff; font-size: 1.5rem; cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .decor-btn:hover { transform: scale(1.1); background: #fffce0; border-color: var(--gold-dark); }
-        .decor-btn:active { transform: scale(0.95); }
-
-        /* --- ปุ่มอั่งเปา --- */
         .btn-primary {
             background: linear-gradient(to bottom, #E60000, #CC0000) !important;
             color: #FFD700 !important; border: 2px solid #FFD700 !important;
             padding: 12px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
             cursor: pointer; width: 100%; display: inline-block; box-sizing: border-box;
-            margin-top: 10px; text-decoration: none;
-            box-shadow: 0 4px 0 #8B0000, 0 10px 20px rgba(0,0,0,0.2) !important;
+            text-decoration: none; box-shadow: 0 4px 0 #8B0000, 0 10px 20px rgba(0,0,0,0.2) !important;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.5); position: relative; top: 0; transition: 0.1s;
             font-family: 'Mali', cursive;
         }
         .btn-primary::before { content: '🧧'; font-size: 1.2rem; margin-right: 5px; }
         .btn-primary:active { top: 4px; box-shadow: 0 0 0 #8B0000 !important; }
-        .btn-primary:disabled {
-            background: #ccc !important; border-color: #999 !important; color: #666 !important;
-            box-shadow: none !important; top: 0 !important;
-        }
+        .btn-primary:disabled { background: #ccc !important; border-color: #999 !important; color: #666 !important; box-shadow: none !important; top: 0 !important; }
+        .btn-secondary { background: transparent; border: none; color: var(--red-bg); margin-top: 10px; cursor: pointer; text-decoration: underline; font-weight: 700; font-family: 'Mali', cursive; }
 
-        .btn-secondary {
-            background: transparent; border: none;
-            color: var(--red-bg); margin-top: 10px; cursor: pointer;
-            text-decoration: underline; font-weight: 700; font-family: 'Mali', cursive;
-        }
-
-        /* --- จอกล้อง --- */
+        /* Camera & Result */
         .camera-wrapper {
             position: relative; width: 100%; padding-bottom: 133.33%;
-            background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px;
+            background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 10px;
             border: 4px solid var(--gold-main); 
         }
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         #countdown {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 8rem; color: #FFD700; font-weight: 900;
-            text-shadow: 4px 4px 0 #D90000; display: none;
+            font-size: 8rem; color: #FFD700; font-weight: 900; text-shadow: 4px 4px 0 #D90000; display: none;
         }
-
-        /* Result */
-        #qrcode-area {
-            background: #fff; padding: 15px; border-radius: 10px;
-            display: inline-block; margin-bottom: 15px;
-            border: 4px solid var(--red-bg);
-        }
-        #final-image-show img {
-            width: 100%; border-radius: 4px; margin-bottom: 10px;
-            border: 2px solid var(--gold-main);
-        }
+        #qrcode-area { background: #fff; padding: 15px; border-radius: 10px; display: inline-block; margin-bottom: 15px; border: 4px solid var(--red-bg); }
+        #final-image-show img { width: 100%; border-radius: 4px; margin-bottom: 10px; border: 2px solid var(--gold-main); }
     </style>
 </head>
 <body>
@@ -212,14 +191,13 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 9.0 (Custom Decor Selection)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 9.0 (Custom Decor)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
-            <p>🧧 ถ่ายรูปรับคำอวยพรสุดปัง 🧧</p>
-            
+            <p class="subtitle">🧧 ถ่ายรูปรับคำอวยพรสุดปัง 🧧</p>
             <div class="content-box">
-                <p style="color:#333; margin-bottom:10px; font-weight:700;">เลือกรูปแบบกรอบรูป</p>
+                <p class="box-title">เลือกรูปแบบกรอบรูป</p>
                 <div class="layout-selector">
                     <button class="layout-btn" onclick="selectLayout('strip2')"><div class="icon-strip-2"></div><span>2 ช่อง</span></button>
                     <button class="layout-btn" onclick="selectLayout('strip3')"><div class="icon-strip-3"></div><span>3 ช่อง</span></button>
@@ -235,34 +213,23 @@
                     <video id="video" autoplay playsinline></video>
                     <div id="countdown"></div>
                 </div>
-                <p id="status-text" style="font-weight: 700; color: var(--red-bg);">ยิ้มหวานๆ เตรียมตัว...</p>
+                <p id="status-text" style="font-weight: 700; color: var(--red-bg); margin:0;">ยิ้มหวานๆ เตรียมตัว...</p>
             </div>
         </section>
 
         <section id="step-edit" class="hidden">
             <div class="frame-container" id="preview-container">
-                <div id="decor-tl" class="decor decor-tl"></div>
-                <div id="decor-tr" class="decor decor-tr"></div>
-                <div id="decor-bl" class="decor decor-bl"></div>
-                <div id="decor-br" class="decor decor-br"></div>
-
+                <div id="decor-layer"></div>
                 <div id="photo-grid" class="photo-grid"></div>
                 <div id="final-blessing" class="blessing-text"></div>
             </div>
             
-            <div class="content-box" style="margin-top: 20px;">
-                
-                <p style="margin:0; font-weight:700; color:#333;">เลือกของตกแต่ง</p>
-                <div class="decor-options">
-                    <button class="decor-btn" onclick="applyDecor('🧧')">🧧</button>
-                    <button class="decor-btn" onclick="applyDecor('🏮')">🏮</button>
-                    <button class="decor-btn" onclick="applyDecor('🧨')">🧨</button>
-                    <button class="decor-btn" onclick="applyDecor('🍊')">🍊</button>
-                    <button class="decor-btn" onclick="applyDecor('💰')">💰</button>
-                    <button class="decor-btn" onclick="applyDecor('🌸')">🌸</button>
-                </div>
+            <div class="content-box">
+                <p class="box-title">เลือกของตกแต่ง (สูงสุด 5 อัน)</p>
+                <div class="emoji-grid" id="emoji-selector">
+                    </div>
 
-                <p style="margin:0; font-weight:700; color:#333;">เลือกสีมงคล</p>
+                <p class="box-title" style="margin-top: 15px;">เลือกสีมงคล</p>
                 <div class="color-options">
                     <button class="color-btn black" onclick="applyFrame('black')"></button>
                     <button class="color-btn white" onclick="applyFrame('white')"></button>
@@ -298,8 +265,9 @@
         let stream = null;
         let currentLayout = 'strip3';
         let shotsNeeded = 3;
-        // 🔥 ตัวแปรเก็บของตกแต่งปัจจุบัน 🔥
-        let currentDecor = '🧧'; // ค่าเริ่มต้น
+        // 🔥 ตัวแปรสำหรับของตกแต่ง 🔥
+        const availableEmojis = ['🧧', '🏮', '🧨', '🍊', '💰', '🐉'];
+        let selectedEmojis = []; // เก็บรายการที่ user เลือก
 
         const layouts = {
             'strip2': { count: 2, class: 'grid-strip2' },
@@ -315,6 +283,52 @@
             red: "<span class='text-cn'>顺顺利利，好运连连！</span><span class='text-th'>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี</span>"
         };
 
+        // --- Init ---
+        window.onload = function() {
+            initEmojiSelector(); // สร้างปุ่มเลือก emoji ตอนเริ่ม
+        };
+
+        // --- Emoji Logic ---
+        function initEmojiSelector() {
+            const container = document.getElementById('emoji-selector');
+            availableEmojis.forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.innerText = emoji;
+                btn.className = 'emoji-btn';
+                btn.onclick = () => toggleEmoji(btn, emoji);
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleEmoji(btn, emoji) {
+            const index = selectedEmojis.indexOf(emoji);
+            if (index > -1) {
+                selectedEmojis.splice(index, 1); // เอาออก
+                btn.classList.remove('active');
+            } else {
+                if(selectedEmojis.length >= 5) { alert("เลือกได้สูงสุด 5 อันนะครับ"); return; }
+                selectedEmojis.push(emoji); // เพิ่ม
+                btn.classList.add('active');
+            }
+            renderDecorations(); // แสดงผลใหม่
+        }
+
+        function renderDecorations() {
+            const layer = document.getElementById('decor-layer');
+            layer.innerHTML = ''; // ล้างของเก่า
+            // รายการตำแหน่งที่จะวาง (วนลูปใช้)
+            const positions = ['pos-tl', 'pos-tr', 'pos-bl', 'pos-br', 'pos-tm']; 
+            
+            selectedEmojis.forEach((emoji, index) => {
+                const posClass = positions[index % positions.length];
+                const el = document.createElement('div');
+                el.className = `decor-item ${posClass}`;
+                el.innerText = emoji;
+                layer.appendChild(el);
+            });
+        }
+
+        // --- Main Logic ---
         function selectLayout(type) {
             currentLayout = type; shotsNeeded = layouts[type].count; startCamera();
         }
@@ -345,6 +359,8 @@
             setupPreview();
             document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-edit').classList.add('active');
+            // Reset decorations selection for new photo session if wanted
+            // selectedEmojis = []; renderDecorations(); document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('active'));
         }
 
         function capture() {
@@ -367,37 +383,23 @@
                 grid.appendChild(d);
             });
             applyFrame('red');
-            applyDecor(currentDecor); // 🔥 เรียกใช้ฟังก์ชันใส่ของตกแต่งเริ่มต้น 🔥
-        }
-
-        // 🔥 ฟังก์ชันเปลี่ยนของตกแต่ง 🔥
-        function applyDecor(emoji) {
-            currentDecor = emoji;
-            document.getElementById('decor-tl').innerText = emoji;
-            document.getElementById('decor-tr').innerText = emoji;
-            document.getElementById('decor-bl').innerText = emoji;
-            document.getElementById('decor-br').innerText = emoji;
+            renderDecorations(); // แสดงของตกแต่งที่เลือกไว้ (ถ้ามี)
         }
 
         function applyFrame(color) {
             const c = document.getElementById('preview-container');
             const t = document.getElementById('final-blessing');
-            
-            c.style.cssText = ""; t.style.cssText = "";
-            c.className = 'frame-container';
+            c.style.cssText = ""; t.style.cssText = ""; c.className = 'frame-container';
 
             if(color === 'red') {
                 c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
                 t.style.color = '#FFD700'; t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)';
-            } 
-            else if(color === 'gold') {
+            } else if(color === 'gold') {
                 c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
                 t.style.color = '#8B0000'; t.style.textShadow = 'none'; 
-            } 
-            else if(color === 'black') {
+            } else if(color === 'black') {
                 c.style.background = '#000'; t.style.color = '#FFD700'; t.style.textShadow = 'none';
-            } 
-            else if(color === 'white') {
+            } else if(color === 'white') {
                 c.style.background = '#fff'; t.style.color = '#D90000'; t.style.textShadow = 'none';
             }
             t.innerHTML = blessings[color];
@@ -407,7 +409,6 @@
             const btn = document.getElementById('save-btn');
             const oldText = btn.innerText;
             btn.innerText = "กำลังสร้างอั่งเปา... ⏳"; btn.disabled = true;
-            // ใช้ useCORS: true เพื่อให้ html2canvas อ่านรูป emoji ได้ชัดเจนขึ้น
             html2canvas(document.getElementById('preview-container'), { scale: 3, useCORS: true }).then(canvas => {
                 canvas.toBlob(async (blob) => {
                     try {
