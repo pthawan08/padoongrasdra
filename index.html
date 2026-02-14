@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.10)</title>
+    <title>CNY Photo Booth (Final V10.11)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -134,8 +134,8 @@
         /* ข้อความคำอวยพร */
         .blessing-text { margin-top: 25px; line-height: 1.4; } 
         
-        /* 🔥 แก้ไขให้ใช้ Zen Maru Gothic ตัวอ้วนๆ 🔥 */
-        .text-cn { font-family: 'Zen Maru Gothic', sans-serif; font-size: 2rem; display: block; margin-bottom: 5px; font-weight: 900; letter-spacing: 1px; }
+        /* 🔥 คืนค่าตัวอักษรจีนเป็นแบบ 10.6 เป๊ะๆ 🔥 */
+        .text-cn { font-family: 'Zen Maru Gothic', sans-serif; font-size: 1.8rem; display: block; margin-bottom: 5px; font-weight: 900; }
         .text-th { font-family: 'Mali', cursive; font-size: 1.1rem; font-weight: 700; display: block; }
 
         /* ชื่อโรงเรียน */
@@ -230,7 +230,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.10 (Zen Maru Fix)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.11 (Original CN Text)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -338,12 +338,12 @@
             'grid2x2': { count: 4, class: 'grid-2x2' }
         };
 
-        // 🔥 แปลงคำอวยพรเป็น "จีนตัวเต็ม" เพื่อให้ฟอนต์ Zen Maru Gothic รองรับครบทุกตัวอักษร 🔥
+        // 🔥 เปลี่ยนกลับเป็น จีนตัวย่อ เหมือนเวอร์ชัน 10.6 เป๊ะๆ 🔥
         const blessings = {
-            black: "<span class='text-cn'>新年快樂，恭喜發財！</span><span class='text-th'>สวัสดีปีใหม่ ขอให้ร่ำรวย</span>",
-            white: "<span class='text-cn'>學業進步，馬到成功！</span><span class='text-th'>การเรียนก้าวหน้าและประสบความสำเร็จ</span>",
-            gold: "<span class='text-cn'>新年快樂，萬事如意！</span><span class='text-th'>สวัสดีปีใหม่ สมปรารถนาทุกประการ</span>",
-            red: "<span class='text-cn'>順順利利，好運連連！</span><span class='text-th'>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี</span>"
+            black: "<span class='text-cn'>新年快乐，恭喜发财！</span><span class='text-th'>สวัสดีปีใหม่ ขอให้ร่ำรวย</span>",
+            white: "<span class='text-cn'>学业进步，马到成功！</span><span class='text-th'>การเรียนก้าวหน้าและประสบความสำเร็จ</span>",
+            gold: "<span class='text-cn'>新年快乐，万事如意！</span><span class='text-th'>สวัสดีปีใหม่ สมปรารถนาทุกประการ</span>",
+            red: "<span class='text-cn'>顺顺利利，好运连连！</span><span class='text-th'>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี</span>"
         };
 
         function selectLayout(type) {
