@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (PRS V10.3)</title>
+    <title>CNY Photo Booth (Final V10.5)</title>
     
-   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    
     <style>
         /* --- ตั้งค่าสีหลัก --- */
         :root {
@@ -17,7 +18,7 @@
         }
 
         body {
-            font-family: 'Zen Maru Gothic', cursive;
+            font-family: 'Zen Maru Gothic', sans-serif;
             margin: 0;
             text-align: center;
             display: flex;
@@ -62,7 +63,7 @@
 
         /* --- หัวข้อ --- */
         h1 {
-            font-family: 'Zen Maru Gothic', cursive;
+            font-family: 'Ma Shan Zheng', cursive;
             color: var(--gold-main); font-size: 3.2rem; margin-bottom: 5px; margin-top: 10px;
             text-shadow: 3px 3px 0 #5e0000; letter-spacing: 2px;
         }
@@ -97,14 +98,13 @@
 
         /* --- กรอบพรีวิว --- */
         .frame-container {
-            padding: 30px; 
+            padding: 30px 30px 20px 30px; 
             background: transparent; border: none !important;
             border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
         }
         
-        /* 🔥 ย้ายของตกแต่งมาเกาะที่กรอบขาวตรงนี้ 🔥 */
         .white-frame-wrapper {
-            position: relative; /* ให้ของตกแต่งยึดตำแหน่งจากกล่องนี้ (ซึ่งคือกรอบขาว) */
+            position: relative; 
             display: inline-block;
             width: 100%;
         }
@@ -116,10 +116,8 @@
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s ease;
         }
-        /* ปรับขนาดให้กำลังดี ไม่บังหน้า */
         .decor img { width: 60px; height: auto; }
 
-        /* จัดให้อยู่ตรงมุมกรอบขาวเป๊ะๆ */
         .decor-tl { top: -20px; left: -20px; transform: rotate(-15deg); } 
         .decor-tr { top: -20px; right: -20px; transform: rotate(15deg); } 
         .decor-bl { bottom: -20px; left: -20px; transform: rotate(-15deg); } 
@@ -134,9 +132,18 @@
         .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
         /* ข้อความคำอวยพร */
-        .blessing-text { margin-top: 25px; line-height: 1.4; } /* ดันลงมานิดนึงไม่ให้ชนของตกแต่งล่าง */
-        .text-cn { font-family: 'Zen Maru Gothic', serif; font-size: 1.8rem; display: block; margin-bottom: 5px; font-weight: bold; }
-        .text-th { font-family: 'Mali', cursive; font-size: 1.1rem; font-weight: 700; display: block; }
+        .blessing-text { margin-top: 25px; line-height: 1.4; } 
+        .text-cn { font-family: 'Liu Jian Mao Cao', cursive; font-size: 2.2rem; display: block; margin-bottom: 0px; }
+        .text-th { font-family: 'Zen Maru Gothic', sans-serif; font-size: 1.1rem; font-weight: 700; display: block; }
+
+        /* 🔥 สไตล์สำหรับชื่อโรงเรียน 🔥 */
+        .school-text {
+            margin-top: 5px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
 
         /* --- ปุ่มเลือกสี --- */
         .color-options { display: flex; justify-content: center; gap: 12px; margin: 10px 0 20px; }
@@ -163,292 +170,4 @@
         }
         .decor-btn img { width: 100%; height: auto; } 
         .decor-btn:hover { transform: scale(1.1); background: #fffce0; border-color: var(--gold-dark); }
-        .decor-btn:active { transform: scale(0.95); }
-
-        /* --- ปุ่มอั่งเปา --- */
-        .btn-primary {
-            background: linear-gradient(to bottom, #E60000, #CC0000) !important;
-            color: #FFD700 !important; border: 2px solid #FFD700 !important;
-            padding: 12px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
-            cursor: pointer; width: 100%; display: inline-block; box-sizing: border-box;
-            margin-top: 10px; text-decoration: none;
-            box-shadow: 0 4px 0 #8B0000, 0 10px 20px rgba(0,0,0,0.2) !important;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.5); position: relative; top: 0; transition: 0.1s;
-            font-family: 'Mali', cursive;
-        }
-        .btn-primary::before { content: '🧧'; font-size: 1.2rem; margin-right: 5px; }
-        .btn-primary:active { top: 4px; box-shadow: 0 0 0 #8B0000 !important; }
-        .btn-primary:disabled {
-            background: #ccc !important; border-color: #999 !important; color: #666 !important;
-            box-shadow: none !important; top: 0 !important;
-        }
-
-        .btn-secondary {
-            background: transparent; border: none;
-            color: var(--red-bg); margin-top: 10px; cursor: pointer;
-            text-decoration: underline; font-weight: 700; font-family: 'Mali', cursive;
-        }
-
-        /* --- จอกล้อง --- */
-        .camera-wrapper {
-            position: relative; width: 100%; padding-bottom: 133.33%;
-            background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px;
-            border: 4px solid var(--gold-main); 
-        }
-        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        #countdown {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 8rem; color: #FFD700; font-weight: 900;
-            text-shadow: 4px 4px 0 #D90000; display: none;
-        }
-
-        /* Result */
-        #qrcode-area {
-            background: #fff; padding: 15px; border-radius: 10px;
-            display: inline-block; margin-bottom: 15px;
-            border: 4px solid var(--red-bg);
-        }
-        #final-image-show img {
-            width: 100%; border-radius: 4px; margin-bottom: 10px;
-            border: 2px solid var(--gold-main);
-        }
-    </style>
-</head>
-<body>
-
-    <div class="lantern-container">
-        <div class="lantern" style="animation-delay: 0s;"></div>
-        <div class="lantern" style="animation-delay: 1.5s;"></div>
-    </div>
-
-    <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.2 (Decor on White Frame)</div>
-
-        <section id="step-welcome" class="active">
-            <h1>Chinese New Year</h1>
-            <p>🧧 ถ่ายรูปรับคำอวยพรสุดปัง 🧧</p>
-            
-            <div class="content-box">
-                <p style="color:#333; margin-bottom:10px; font-weight:700;">เลือกรูปแบบกรอบรูป</p>
-                <div class="layout-selector">
-                    <button class="layout-btn" onclick="selectLayout('strip2')"><div class="icon-strip-2"></div><span>2 ช่อง</span></button>
-                    <button class="layout-btn" onclick="selectLayout('strip3')"><div class="icon-strip-3"></div><span>3 ช่อง</span></button>
-                    <button class="layout-btn" onclick="selectLayout('strip4')"><div class="icon-strip-4"></div><span>4 ช่อง</span></button>
-                    <button class="layout-btn" onclick="selectLayout('grid2x2')"><div class="icon-grid-2x2"></div><span>4 ช่อง</span></button>
-                </div>
-            </div>
-        </section>
-
-        <section id="step-camera" class="hidden">
-            <div class="content-box">
-                <div class="camera-wrapper">
-                    <video id="video" autoplay playsinline></video>
-                    <div id="countdown"></div>
-                </div>
-                <p id="status-text" style="font-weight: 700; color: var(--red-bg);">ยิ้มหวานๆ เตรียมตัว...</p>
-            </div>
-        </section>
-
-        <section id="step-edit" class="hidden">
-            <div class="frame-container" id="preview-container">
-                
-                <div class="white-frame-wrapper">
-                    <div class="decor decor-tl"><img id="img-decor-tl" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-tr"><img id="img-decor-tr" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-bl"><img id="img-decor-bl" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-br"><img id="img-decor-br" src="moneybag.png" alt="decor"></div>
-
-                    <div id="photo-grid" class="photo-grid"></div>
-                </div>
-
-                <div id="final-blessing" class="blessing-text"></div>
-            </div>
-            
-            <div class="content-box" style="margin-top: 20px;">
-                
-                <p style="margin:0; font-weight:700; color:#333;">เลือกของตกแต่ง</p>
-                <div class="decor-options">
-                    <button class="decor-btn" onclick="applyDecor('moneybag.png')">
-                        <img src="moneybag.png" alt="Money Bag">
-                    </button>
-                    <button class="decor-btn" onclick="applyDecor('lion.png')">
-                        <img src="lion.png" alt="Lion">
-                    </button>
-                    <button class="decor-btn" onclick="applyDecor('firecracker.png')">
-                        <img src="firecracker.png" alt="Firecracker">
-                    </button>
-                    <button class="decor-btn" onclick="applyDecor('lantern.png')">
-                        <img src="lantern.png" alt="Lantern">
-                    </button>
-                </div>
-
-                <p style="margin:0; font-weight:700; color:#333;">เลือกสีมงคล</p>
-                <div class="color-options">
-                    <button class="color-btn black" onclick="applyFrame('black')"></button>
-                    <button class="color-btn white" onclick="applyFrame('white')"></button>
-                    <button class="color-btn gold" onclick="applyFrame('gold')"></button>
-                    <button class="color-btn red" onclick="applyFrame('red')"></button>
-                </div>
-                
-                <button class="btn-primary" id="save-btn" onclick="uploadAndGenerate()">รับรูปและอั่งเปา</button>
-                <button class="btn-secondary" onclick="location.reload()">เริ่มใหม่</button>
-            </div>
-        </section>
-
-        <section id="step-result" class="hidden">
-            <div class="content-box">
-                <h2 style="color:var(--red-bg); margin-top:0;">🎉 เฮงๆ รวยๆ!</h2>
-                <div id="qrcode-area">
-                    <div id="qrcode"></div>
-                    <p style="margin:5px 0 0; font-size:1rem; font-weight:700; color: #8B0000 !important;">สแกนเพื่อรับรูป</p>
-                </div>
-                <div id="final-image-show"></div>
-                <a id="download-link" class="btn-primary">ดาวน์โหลดรูปภาพ</a>
-                <button class="btn-secondary" onclick="location.reload()">ถ่ายใหม่</button>
-            </div>
-        </section>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
-    <script>
-        let currentStep = 1;
-        let photos = [];
-        let stream = null;
-        let currentLayout = 'strip3';
-        let shotsNeeded = 3;
-        
-        // 🔥 เปลี่ยนรูปเริ่มต้นเป็นถุงเงิน (moneybag.png) 🔥
-        let currentDecorUrl = 'moneybag.png';
-
-        const layouts = {
-            'strip2': { count: 2, class: 'grid-strip2' },
-            'strip3': { count: 3, class: 'grid-strip3' },
-            'strip4': { count: 4, class: 'grid-strip4' },
-            'grid2x2': { count: 4, class: 'grid-2x2' }
-        };
-
-        const blessings = {
-            black: "<span class='text-cn'>新年快乐，恭喜发财！</span><span class='text-th'>สวัสดีปีใหม่ ขอให้ร่ำรวย</span>",
-            white: "<span class='text-cn'>学业进步，马到成功！</span><span class='text-th'>การเรียนก้าวหน้าและประสบความสำเร็จ</span>",
-            gold: "<span class='text-cn'>新年快乐，万事如意！</span><span class='text-th'>สวัสดีปีใหม่ สมปรารถนาทุกประการ</span>",
-            red: "<span class='text-cn'>顺顺利利，好运连连！</span><span class='text-th'>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี</span>"
-        };
-
-        function selectLayout(type) {
-            currentLayout = type; shotsNeeded = layouts[type].count; startCamera();
-        }
-
-        async function startCamera() {
-            document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
-            document.getElementById('step-camera').classList.add('active');
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", aspectRatio: 4/3 }, audio: false });
-                document.getElementById('video').srcObject = stream;
-                startCountdownSequence();
-            } catch (e) { alert("Error: " + e.message); location.reload(); }
-        }
-
-        async function startCountdownSequence() {
-            photos = [];
-            const cd = document.getElementById('countdown');
-            for (let i = 1; i <= shotsNeeded; i++) {
-                document.getElementById('status-text').innerText = `รูปที่ ${i} / ${shotsNeeded}`;
-                await new Promise(r => {
-                    let c = 3; cd.innerText = c; cd.style.display = 'block';
-                    const t = setInterval(() => { c--; if(c>0) cd.innerText=c; else { clearInterval(t); cd.innerText="📸"; r(); } }, 1000);
-                });
-                capture(); cd.style.display = 'none';
-                if (i < shotsNeeded) await new Promise(r => setTimeout(r, 800));
-            }
-            if(stream) stream.getTracks().forEach(t => t.stop());
-            setupPreview();
-            document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
-            document.getElementById('step-edit').classList.add('active');
-        }
-
-        function capture() {
-            const v = document.getElementById('video');
-            const c = document.createElement('canvas');
-            c.width = v.videoWidth; c.height = v.videoHeight;
-            const ctx = c.getContext('2d');
-            ctx.translate(c.width, 0); ctx.scale(-1, 1);
-            ctx.drawImage(v, 0, 0);
-            photos.push(c.toDataURL('image/png'));
-        }
-
-        function setupPreview() {
-            const grid = document.getElementById('photo-grid');
-            grid.className = 'photo-grid ' + layouts[currentLayout].class; 
-            grid.innerHTML = '';
-            photos.forEach(src => {
-                const d = document.createElement('div');
-                d.className = 'photo-slot'; d.style.backgroundImage = `url(${src})`;
-                grid.appendChild(d);
-            });
-            applyFrame('red');
-            applyDecor(currentDecorUrl);
-        }
-
-        function applyDecor(imgUrl) {
-            currentDecorUrl = imgUrl;
-            document.getElementById('img-decor-tl').src = imgUrl;
-            document.getElementById('img-decor-tr').src = imgUrl;
-            document.getElementById('img-decor-bl').src = imgUrl;
-            document.getElementById('img-decor-br').src = imgUrl;
-        }
-
-        function applyFrame(color) {
-            const c = document.getElementById('preview-container');
-            const t = document.getElementById('final-blessing');
-            
-            c.style.cssText = ""; t.style.cssText = "";
-            c.className = 'frame-container';
-
-            if(color === 'red') {
-                c.style.background = 'linear-gradient(135deg, #D90000 0%, #8A0000 100%)';
-                t.style.color = '#FFD700'; t.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)';
-            } 
-            else if(color === 'gold') {
-                c.style.background = 'linear-gradient(135deg, #FFD700 0%, #DAA520 100%)';
-                t.style.color = '#8B0000'; t.style.textShadow = 'none'; 
-            } 
-            else if(color === 'black') {
-                c.style.background = '#000'; t.style.color = '#FFD700'; t.style.textShadow = 'none';
-            } 
-            else if(color === 'white') {
-                c.style.background = '#fff'; t.style.color = '#D90000'; t.style.textShadow = 'none';
-            }
-            t.innerHTML = blessings[color];
-        }
-
-        function uploadAndGenerate() {
-            const btn = document.getElementById('save-btn');
-            const oldText = btn.innerText;
-            btn.innerText = "กำลังสร้างอั่งเปา... ⏳"; btn.disabled = true;
-            html2canvas(document.getElementById('preview-container'), { scale: 3, useCORS: true }).then(canvas => {
-                canvas.toBlob(async (blob) => {
-                    try {
-                        const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, { method: 'POST', body: blob });
-                        if(!res.ok) throw new Error('Fail');
-                        const data = await res.json();
-                        
-                        document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
-                        document.getElementById('step-result').classList.add('active');
-                        
-                        document.getElementById('final-image-show').innerHTML = `<img src="${data.url}">`;
-                        const link = document.getElementById('download-link');
-                        link.href = data.url; link.download = `cny.png`;
-                        
-                        document.getElementById("qrcode").innerHTML = "";
-                        new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
-                    } catch (e) { 
-                        alert("Upload failed. Error: " + e.message); btn.innerText = oldText; btn.disabled = false; 
-                    }
-                }, 'image/png');
-            });
-        }
-    </script>
-</body>
-</html>
+        .decor-btn:active {
