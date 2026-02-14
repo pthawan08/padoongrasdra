@@ -233,7 +233,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.6 (Readable Fonts)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.6 (Fixed Images)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -264,10 +264,10 @@
             <div class="frame-container" id="preview-container">
                 
                 <div class="white-frame-wrapper">
-                    <div class="decor decor-tl"><img id="img-decor-tl" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-tr"><img id="img-decor-tr" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-bl"><img id="img-decor-bl" src="moneybag.png" alt="decor"></div>
-                    <div class="decor decor-br"><img id="img-decor-br" src="moneybag.png" alt="decor"></div>
+                    <div class="decor decor-tl"><img id="img-decor-tl" src="/moneybag.png" alt="decor"></div>
+                    <div class="decor decor-tr"><img id="img-decor-tr" src="/moneybag.png" alt="decor"></div>
+                    <div class="decor decor-bl"><img id="img-decor-bl" src="/moneybag.png" alt="decor"></div>
+                    <div class="decor decor-br"><img id="img-decor-br" src="/moneybag.png" alt="decor"></div>
 
                     <div id="photo-grid" class="photo-grid"></div>
                 </div>
@@ -282,17 +282,17 @@
                 
                 <p style="margin:0; font-weight:700; color:#333;">เลือกของตกแต่ง</p>
                 <div class="decor-options">
-                    <button class="decor-btn" onclick="applyDecor('moneybag.png')">
-                        <img src="moneybag.png" alt="Money Bag">
+                    <button class="decor-btn" onclick="applyDecor('/moneybag.png')">
+                        <img src="/moneybag.png" alt="Money Bag">
                     </button>
-                    <button class="decor-btn" onclick="applyDecor('lion.png')">
-                        <img src="lion.png" alt="Lion">
+                    <button class="decor-btn" onclick="applyDecor('/lion.png')">
+                        <img src="/lion.png" alt="Lion">
                     </button>
-                    <button class="decor-btn" onclick="applyDecor('firecracker.png')">
-                        <img src="firecracker.png" alt="Firecracker">
+                    <button class="decor-btn" onclick="applyDecor('/firecracker.png')">
+                        <img src="/firecracker.png" alt="Firecracker">
                     </button>
-                    <button class="decor-btn" onclick="applyDecor('lantern.png')">
-                        <img src="lantern.png" alt="Lantern">
+                    <button class="decor-btn" onclick="applyDecor('/lantern.png')">
+                        <img src="/lantern.png" alt="Lantern">
                     </button>
                 </div>
 
@@ -333,7 +333,8 @@
         let currentLayout = 'strip3';
         let shotsNeeded = 3;
         
-        let currentDecorUrl = 'moneybag.png';
+        // 🔥 เติม / หน้าชื่อไฟล์ 🔥
+        let currentDecorUrl = '/moneybag.png';
 
         const layouts = {
             'strip2': { count: 2, class: 'grid-strip2' },
