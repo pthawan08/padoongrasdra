@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.0)</title>
+    <title>CNY Photo Booth (Final V10.1)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -98,25 +98,23 @@
 
         /* --- กรอบพรีวิว & ของตกแต่ง (Decorations) --- */
         .frame-container {
-            padding: 35px 25px 30px 25px; /* เพิ่มพื้นที่ขอบให้รูปภาพ */
+            padding: 35px 25px 30px 25px; /* เพิ่มพื้นที่ให้รูปภาพไม่ตกขอบ */
             background: transparent; border: none !important;
             border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
             position: relative;
         }
         
-        /* 🔥 CSS สำหรับรูปภาพของตกแต่ง 🔥 */
+        /* 🔥 CSS สำหรับรูปภาพของตกแต่ง 4 มุม 🔥 */
         .decor {
             position: absolute;
             z-index: 10;
-            /* เพิ่มเงาให้รูปภาพดูมีมิติ */
-            filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.5));
+            filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.5)); /* เงาสวยๆ */
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s ease;
         }
-        /* ปรับขนาดรูปภาพของตกแต่ง */
+        /* ปรับขนาดรูปให้พอดี */
         .decor img { width: 70px; height: auto; }
 
-        /* ปรับตำแหน่งและองศาให้เข้ามุม */
         .decor-tl { top: -20px; left: -20px; transform: rotate(-20deg); } 
         .decor-tr { top: -20px; right: -20px; transform: rotate(20deg); } 
         .decor-bl { bottom: -20px; left: -20px; transform: rotate(-20deg); } 
@@ -148,17 +146,17 @@
         .color-btn.gold { background: linear-gradient(45deg, #FFD700, #DAA520); }
         .color-btn.red { background: linear-gradient(45deg, #D90000, #8A0000); }
 
-        /* --- 🔥 ปุ่มเลือกของตกแต่ง (รูปภาพจริง) 🔥 --- */
+        /* --- 🔥 ปุ่มเลือกของตกแต่ง (ดึงไฟล์ตรงจาก GitHub) 🔥 --- */
         .decor-options { display: flex; justify-content: center; gap: 15px; margin: 10px 0 20px; flex-wrap: wrap; }
         .decor-btn {
-            width: 60px; height: 60px; /* เพิ่มขนาดปุ่ม */
+            width: 60px; height: 60px; 
             border-radius: 12px; border: 3px solid #eee;
             background: #fff; cursor: pointer; transition: all 0.2s;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 5px;
         }
-        .decor-btn img { width: 100%; height: auto; } /* ให้รูปเต็มปุ่ม */
+        .decor-btn img { width: 100%; height: auto; } 
         .decor-btn:hover { transform: scale(1.1); background: #fffce0; border-color: var(--gold-dark); }
         .decor-btn:active { transform: scale(0.95); }
 
@@ -219,7 +217,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.0 (Custom Image Selection)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.1 (Local Image Fix)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -248,10 +246,10 @@
 
         <section id="step-edit" class="hidden">
             <div class="frame-container" id="preview-container">
-                <div class="decor decor-tl"><img id="img-decor-tl" src="" alt="decor"></div>
-                <div class="decor decor-tr"><img id="img-decor-tr" src="" alt="decor"></div>
-                <div class="decor decor-bl"><img id="img-decor-bl" src="" alt="decor"></div>
-                <div class="decor decor-br"><img id="img-decor-br" src="" alt="decor"></div>
+                <div class="decor decor-tl"><img id="img-decor-tl" src="lion.png" alt="decor"></div>
+                <div class="decor decor-tr"><img id="img-decor-tr" src="lion.png" alt="decor"></div>
+                <div class="decor decor-bl"><img id="img-decor-bl" src="lion.png" alt="decor"></div>
+                <div class="decor decor-br"><img id="img-decor-br" src="lion.png" alt="decor"></div>
 
                 <div id="photo-grid" class="photo-grid"></div>
                 <div id="final-blessing" class="blessing-text"></div>
@@ -261,14 +259,17 @@
                 
                 <p style="margin:0; font-weight:700; color:#333;">เลือกของตกแต่ง</p>
                 <div class="decor-options">
-                    <button class="decor-btn" onclick="applyDecor('https://multimedia.polite.co.th/file/2025/01/30/211936.png')">
-                        <img src="https://multimedia.polite.co.th/file/2025/01/30/211936.png" alt="Lion">
+                    <button class="decor-btn" onclick="applyDecor('lion.png')">
+                        <img src="lion.png" alt="Lion">
                     </button>
-                    <button class="decor-btn" onclick="applyDecor('https://multimedia.polite.co.th/file/2025/01/30/211950.png')">
-                        <img src="https://multimedia.polite.co.th/file/2025/01/30/211950.png" alt="Firecracker">
+                    <button class="decor-btn" onclick="applyDecor('firecracker.png')">
+                        <img src="firecracker.png" alt="Firecracker">
                     </button>
-                    <button class="decor-btn" onclick="applyDecor('https://multimedia.polite.co.th/file/2025/01/30/212007.png')">
-                        <img src="https://multimedia.polite.co.th/file/2025/01/30/212007.png" alt="Lantern">
+                    <button class="decor-btn" onclick="applyDecor('lantern.png')">
+                        <img src="lantern.png" alt="Lantern">
+                    </button>
+                    <button class="decor-btn" onclick="applyDecor('moneybag.png')">
+                        <img src="moneybag.png" alt="Money Bag">
                     </button>
                 </div>
 
@@ -308,8 +309,8 @@
         let stream = null;
         let currentLayout = 'strip3';
         let shotsNeeded = 3;
-        // 🔥 ลิงก์รูปภาพเริ่มต้น (หัวสิงโต) 🔥
-        let currentDecorUrl = 'https://multimedia.polite.co.th/file/2025/01/30/211936.png';
+        // 🔥 เปลี่ยนรูปเริ่มต้นเป็น lion.png ที่ดึงจาก GitHub ของคุณ 🔥
+        let currentDecorUrl = 'lion.png';
 
         const layouts = {
             'strip2': { count: 2, class: 'grid-strip2' },
@@ -380,7 +381,7 @@
             applyDecor(currentDecorUrl); // เรียกใช้ฟังก์ชันใส่รูปเริ่มต้น
         }
 
-        // 🔥 ฟังก์ชันเปลี่ยนรูปภาพของตกแต่ง (รับ URL รูปภาพ) 🔥
+        // 🔥 ฟังก์ชันเปลี่ยนรูปภาพของตกแต่ง 🔥
         function applyDecor(imgUrl) {
             currentDecorUrl = imgUrl;
             document.getElementById('img-decor-tl').src = imgUrl;
@@ -417,8 +418,8 @@
             const btn = document.getElementById('save-btn');
             const oldText = btn.innerText;
             btn.innerText = "กำลังสร้างอั่งเปา... ⏳"; btn.disabled = true;
-            // 🔥 สำคัญ: useCORS: true เพื่อให้โหลดรูปข้ามโดเมนได้ 🔥
-            html2canvas(document.getElementById('preview-container'), { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+            // พอไฟล์อยู่บน GitHub เดียวกัน html2canvas จะทำงานได้ดีขึ้น ปัญหาจอดำจะลดลง
+            html2canvas(document.getElementById('preview-container'), { scale: 3, useCORS: true }).then(canvas => {
                 canvas.toBlob(async (blob) => {
                     try {
                         const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, { method: 'POST', body: blob });
@@ -435,7 +436,7 @@
                         document.getElementById("qrcode").innerHTML = "";
                         new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
                     } catch (e) { 
-                        alert("Upload failed (CORS issue possible)"); btn.innerText = oldText; btn.disabled = false; 
+                        alert("Upload failed. Error: " + e.message); btn.innerText = oldText; btn.disabled = false; 
                     }
                 }, 'image/png');
             });
