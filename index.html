@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.17)</title>
+    <title>CNY Photo Booth (Final V10.18)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -101,6 +101,7 @@
             padding: 30px 30px 20px 30px; 
             background: transparent; border: none !important;
             border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
+            box-sizing: border-box; 
         }
         
         .white-frame-wrapper {
@@ -128,17 +129,16 @@
         .grid-strip2, .grid-strip3, .grid-strip4 { grid-template-columns: 1fr; }
         .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
         
-        /* 🔥 ภาพถ่ายใช้ img เพื่อความคมชัดสูงสุด 🔥 */
         .photo-slot { width: 100%; background-color: #eee; position: relative; overflow: hidden; }
         .photo-slot img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
         
+        /* สัดส่วนช่องรูป */
         .grid-strip2 .photo-slot, .grid-strip3 .photo-slot, .grid-strip4 .photo-slot { aspect-ratio: 4/3; }
         .grid-2x2 .photo-slot { aspect-ratio: 1/1; }
 
         /* ข้อความคำอวยพร */
         .blessing-text { margin-top: 25px; line-height: 1.4; overflow: hidden; } 
         
-        /* 🔥 บังคับภาษาจีนห้ามตกบรรทัด 🔥 */
         .text-cn { 
             font-family: 'Zen Maru Gothic', sans-serif; 
             font-size: 1.35rem; 
@@ -185,7 +185,7 @@
         .decor-btn:hover { transform: scale(1.1); background: #fffce0; border-color: var(--gold-dark); }
         .decor-btn:active { transform: scale(0.95); }
 
-        /* --- ปุ่มอั่งเปา --- */
+        /* --- ปุ่มกด --- */
         .btn-primary {
             background: linear-gradient(to bottom, #E60000, #CC0000) !important;
             color: #FFD700 !important; border: 2px solid #FFD700 !important;
@@ -210,11 +210,13 @@
 
         /* --- จอกล้อง --- */
         .camera-wrapper {
-            position: relative; width: 100%; padding-bottom: 133.33%;
+            position: relative; width: 100%; 
+            padding-bottom: 75%; /* ค่าตั้งต้น (4:3) */
             background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 15px;
             border: 4px solid var(--gold-main); 
+            transition: padding-bottom 0.3s;
         }
-        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); transition: transform 0.3s;}
         #countdown {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 8rem; color: #FFD700; font-weight: 900;
@@ -241,7 +243,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.17 (4K Quality + JPEG Fix)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.18 (No Stretch & Mirror Toggle)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -260,11 +262,15 @@
 
         <section id="step-camera" class="hidden">
             <div class="content-box">
-                <div class="camera-wrapper">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <p id="status-text" style="font-weight: 700; color: var(--red-bg); margin: 0;">ยิ้มหวานๆ เตรียมตัว...</p>
+                    <button onclick="toggleMirror()" style="background: var(--gold-dark); color: #8B0000; border: none; padding: 6px 12px; border-radius: 20px; font-family: 'Mali', cursive; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">🪞 สลับกระจก</button>
+                </div>
+                
+                <div class="camera-wrapper" id="cam-wrapper">
                     <video id="video" autoplay playsinline></video>
                     <div id="countdown"></div>
                 </div>
-                <p id="status-text" style="font-weight: 700; color: var(--red-bg);">ยิ้มหวานๆ เตรียมตัว...</p>
             </div>
         </section>
 
@@ -344,6 +350,7 @@
         let shotsNeeded = 3;
         
         let currentDecorUrl = 'https://cdn.jsdelivr.net/gh/pthawan08/padoongrasdra@main/moneybag.png';
+        let isMirrored = true; // สถานะกล้องหน้ากระจก (เริ่มต้น=ใช่)
 
         const layouts = {
             'strip2': { count: 2, class: 'grid-strip2' },
@@ -359,20 +366,37 @@
             red: "<span class='text-cn'>顺顺利利，好运连连！</span><span class='text-th'>ทุกอย่างราบรื่นและโชคดีตลอดทั้งปี</span>"
         };
 
+        // 🔥 ฟังก์ชันสลับกล้อง 🔥
+        function toggleMirror() {
+            isMirrored = !isMirrored;
+            const v = document.getElementById('video');
+            v.style.transform = isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+        }
+
         function selectLayout(type) {
-            currentLayout = type; shotsNeeded = layouts[type].count; startCamera();
+            currentLayout = type; 
+            shotsNeeded = layouts[type].count; 
+            
+            // ปรับสัดส่วนกล้องให้ตรงกับกรอบรูป เพื่อไม่ให้ภาพยืดตอนถ่าย!
+            const camWrapper = document.getElementById('cam-wrapper');
+            if(type === 'grid2x2') {
+                camWrapper.style.paddingBottom = '100%'; // สี่เหลี่ยมจัตุรัส 1:1
+            } else {
+                camWrapper.style.paddingBottom = '75%'; // แนวนอน 4:3
+            }
+            
+            startCamera();
         }
 
         async function startCamera() {
             document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-camera').classList.add('active');
             try {
-                // 🔥 บังคับเรียกความละเอียดสูงสุดเท่าที่กล้องมือถือจะทำได้ 🔥
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: "user", 
-                        width: { ideal: 4096 }, // ขอ 4K ไปเลย เดี๋ยวเบราว์เซอร์จะให้ระดับสูงสุดของเครื่องมาเอง
-                        height: { ideal: 2160 } 
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 } 
                     }, 
                     audio: false 
                 });
@@ -399,14 +423,44 @@
             document.getElementById('step-edit').classList.add('active');
         }
 
+        // 🔥 แก้ไขระบบ Capture ไม่ให้ภาพยืด และรองรับการสลับกระจก 🔥
         function capture() {
             const v = document.getElementById('video');
             const c = document.createElement('canvas');
-            c.width = v.videoWidth; 
-            c.height = v.videoHeight;
+            
+            // หาเป้าหมายสัดส่วนภาพ (Target Ratio)
+            const targetRatio = currentLayout === 'grid2x2' ? 1 : (4/3); 
+            const videoRatio = v.videoWidth / v.videoHeight;
+
+            let drawWidth = v.videoWidth;
+            let drawHeight = v.videoHeight;
+            let startX = 0;
+            let startY = 0;
+
+            // คราปภาพตรงกลาง (Crop Center) ให้สัดส่วนเป๊ะกับกรอบ
+            if (videoRatio > targetRatio) {
+                // วิดีโอกว้างไป (ตัดซ้าย-ขวา)
+                drawWidth = v.videoHeight * targetRatio;
+                startX = (v.videoWidth - drawWidth) / 2;
+            } else {
+                // วิดีโอสูงไป (ตัดบน-ล่าง)
+                drawHeight = v.videoWidth / targetRatio;
+                startY = (v.videoHeight - drawHeight) / 2;
+            }
+
+            c.width = drawWidth;
+            c.height = drawHeight;
             const ctx = c.getContext('2d');
-            ctx.translate(c.width, 0); ctx.scale(-1, 1);
-            ctx.drawImage(v, 0, 0);
+
+            // จัดการการกลับด้านกล้อง
+            if (isMirrored) {
+                ctx.translate(c.width, 0);
+                ctx.scale(-1, 1);
+            }
+
+            // สั่งวาดภาพลง Canvas แบบครอปให้พอดีเป๊ะ
+            ctx.drawImage(v, startX, startY, drawWidth, drawHeight, 0, 0, drawWidth, drawHeight);
+            
             photos.push(c.toDataURL('image/jpeg', 1.0)); 
         }
 
@@ -476,10 +530,8 @@
             
             const container = document.getElementById('preview-container');
             
-            // 🔥 อัด Scale ขึ้นเป็น 5 เท่า เพื่อความคมชัดระดับ HD ขั้นสุดตอนดาวน์โหลด 🔥
-            html2canvas(container, { scale: 5, useCORS: true, allowTaint: true }).then(canvas => {
-                
-                // 🔥 แปลงเป็น JPEG ที่คุณภาพ 85% จะทำให้ไฟล์เบา แต่คงความชัดไว้ 100% แก้ปัญหา QR หาย 🔥
+            // ความคมชัดระดับ 3 เท่า
+            html2canvas(container, { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
                 canvas.toBlob(async (blob) => {
                     try {
                         const res = await fetch(`/api/upload?filename=cny-${Date.now()}.jpg`, { method: 'POST', body: blob });
@@ -496,10 +548,10 @@
                         document.getElementById("qrcode").innerHTML = "";
                         new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
                     } catch (e) { 
-                        alert("อัปโหลดไม่สำเร็จ (ระบบอาจรับไฟล์ไม่ไหว) ลองกดอีกครั้งนะครับ Error: " + e.message); 
+                        alert("อัปโหลดไม่สำเร็จ ลองอีกครั้งนะครับ Error: " + e.message); 
                         btn.innerText = oldText; btn.disabled = false; 
                     }
-                }, 'image/jpeg', 0.85); 
+                }, 'image/jpeg', 0.9); 
             });
         }
     </script>
