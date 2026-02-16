@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.14)</title>
+    <title>CNY Photo Booth (Final V10.15)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -101,8 +101,6 @@
             padding: 30px 30px 20px 30px; 
             background: transparent; border: none !important;
             border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
-            /* เพิ่มเพื่อให้ขยายร่างได้เต็มที่ */
-            box-sizing: border-box; 
         }
         
         .white-frame-wrapper {
@@ -136,7 +134,6 @@
         /* ข้อความคำอวยพร */
         .blessing-text { margin-top: 25px; line-height: 1.4; } 
         
-        /* 🔥 ปรับขนาดฟอนต์จีนลงเล็กน้อย เพื่อไม่ให้ตกบรรทัด 🔥 */
         .text-cn { font-family: 'Zen Maru Gothic', sans-serif; font-size: 1.5rem; display: block; margin-bottom: 5px; font-weight: 900; }
         .text-th { font-family: 'Mali', cursive; font-size: 1.1rem; font-weight: 700; display: block; }
 
@@ -232,7 +229,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.14 (High-Res Capture Fix)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.15 (HD Camera & QR Fix)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -358,11 +355,12 @@
             document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-camera').classList.add('active');
             try {
-                // 🔥 แก้ไข 1: ขอความละเอียดกล้องสูงขึ้น (HD+) 🔥
+                // 🔥 บังคับดึงภาพ 1080p (Full HD) เพื่อให้ภาพคมชัดเหมือนกล้องจริง 🔥
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: "user", 
-                        height: { ideal: 1080 } // พยายามขอความสูง 1080p
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 } 
                     }, 
                     audio: false 
                 });
@@ -396,7 +394,7 @@
             const ctx = c.getContext('2d');
             ctx.translate(c.width, 0); ctx.scale(-1, 1);
             ctx.drawImage(v, 0, 0);
-            photos.push(c.toDataURL('image/png'));
+            photos.push(c.toDataURL('image/jpeg', 1.0)); // เก็บรูปถ่ายเป็น JPEG คุณภาพสูง
         }
 
         function setupPreview() {
@@ -458,34 +456,14 @@
             
             const container = document.getElementById('preview-container');
             
-            // 🔥 แก้ไข 2: เทคนิค "ขยายร่างก่อนถ่าย" เพื่อความคมชัดสูงสุด 🔥
-            // เก็บค่า Style เดิมไว้ก่อน
-            const originalStyles = {
-                position: container.style.position,
-                left: container.style.left,
-                top: container.style.top,
-                width: container.style.width,
-                maxWidth: container.style.maxWidth,
-                zIndex: container.style.zIndex
-            };
-
-            // บังคับขยายร่างให้กว้าง 1600px (High-Res) ชั่วคราว
-            container.style.position = 'fixed'; // หลุดจาก parent เพื่อให้ขยายได้เต็มที่
-            container.style.left = '0';
-            container.style.top = '0';
-            container.style.width = '1600px'; // ความกว้างเป้าหมายที่คมชัด
-            container.style.maxWidth = 'none'; // ปลดล็อค max-width
-            container.style.zIndex = '-9999'; // ซ่อนไว้ข้างหลัง (กันคนเห็นตอนขยาย)
-
-            // ถ่ายภาพตอนที่ขยายร่างแล้ว (ใช้ scale 2 ก็พอ เพราะฐานกว้างแล้ว = 3200px)
-            html2canvas(container, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
-                // คืนค่า Style เดิมทันที (หดกลับ)
-                Object.assign(container.style, originalStyles);
-
+            // ใช้ Scale 3 ภาพคมชัดโดยไม่ทำให้เลย์เอาต์พัง
+            html2canvas(container, { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+                
+                // 🔥 แก้ไขไฟล์ให้ออกมาเป็น 'JPEG' เพื่อลดขนาดไฟล์ แก้ปัญหาอัปโหลดล้มเหลว (QR Code หาย) 🔥
                 canvas.toBlob(async (blob) => {
                     try {
-                        const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, { method: 'POST', body: blob });
-                        if(!res.ok) throw new Error('Fail');
+                        const res = await fetch(`/api/upload?filename=cny-${Date.now()}.jpg`, { method: 'POST', body: blob });
+                        if(!res.ok) throw new Error('Upload API failed');
                         const data = await res.json();
                         
                         document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
@@ -493,14 +471,15 @@
                         
                         document.getElementById('final-image-show').innerHTML = `<img src="${data.url}">`;
                         const link = document.getElementById('download-link');
-                        link.href = data.url; link.download = `cny.png`;
+                        link.href = data.url; link.download = `cny.jpg`;
                         
                         document.getElementById("qrcode").innerHTML = "";
                         new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
                     } catch (e) { 
-                        alert("Upload failed. Error: " + e.message); btn.innerText = oldText; btn.disabled = false; 
+                        alert("ขออภัย! อัปโหลดไม่สำเร็จ (ระบบอาจจะเต็ม) ลองอีกครั้งนะครับ Error: " + e.message); 
+                        btn.innerText = oldText; btn.disabled = false; 
                     }
-                }, 'image/png');
+                }, 'image/jpeg', 0.9); // 0.9 คือคุณภาพ JPEG 90% (ชัดแต่ไฟล์ไม่ใหญ่เว่อร์)
             });
         }
     </script>
