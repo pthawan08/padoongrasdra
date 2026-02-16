@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.13)</title>
+    <title>CNY Photo Booth (Final V10.14)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -101,6 +101,8 @@
             padding: 30px 30px 20px 30px; 
             background: transparent; border: none !important;
             border-radius: 4px; margin-bottom: 15px; transition: all 0.2s;
+            /* เพิ่มเพื่อให้ขยายร่างได้เต็มที่ */
+            box-sizing: border-box; 
         }
         
         .white-frame-wrapper {
@@ -230,7 +232,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.13 (Fix Font Line & Sharpness)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.14 (High-Res Capture Fix)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -356,7 +358,14 @@
             document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-camera').classList.add('active');
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", aspectRatio: 4/3 }, audio: false });
+                // 🔥 แก้ไข 1: ขอความละเอียดกล้องสูงขึ้น (HD+) 🔥
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: "user", 
+                        height: { ideal: 1080 } // พยายามขอความสูง 1080p
+                    }, 
+                    audio: false 
+                });
                 document.getElementById('video').srcObject = stream;
                 startCountdownSequence();
             } catch (e) { alert("Error: " + e.message); location.reload(); }
@@ -446,8 +455,33 @@
             const btn = document.getElementById('save-btn');
             const oldText = btn.innerText;
             btn.innerText = "กำลังสร้างอั่งเปา... ⏳"; btn.disabled = true;
-            // 🔥 เพิ่ม scale เป็น 4 เพื่อความคมชัดสูงสุด 🔥
-            html2canvas(document.getElementById('preview-container'), { scale: 4, useCORS: true, allowTaint: true }).then(canvas => {
+            
+            const container = document.getElementById('preview-container');
+            
+            // 🔥 แก้ไข 2: เทคนิค "ขยายร่างก่อนถ่าย" เพื่อความคมชัดสูงสุด 🔥
+            // เก็บค่า Style เดิมไว้ก่อน
+            const originalStyles = {
+                position: container.style.position,
+                left: container.style.left,
+                top: container.style.top,
+                width: container.style.width,
+                maxWidth: container.style.maxWidth,
+                zIndex: container.style.zIndex
+            };
+
+            // บังคับขยายร่างให้กว้าง 1600px (High-Res) ชั่วคราว
+            container.style.position = 'fixed'; // หลุดจาก parent เพื่อให้ขยายได้เต็มที่
+            container.style.left = '0';
+            container.style.top = '0';
+            container.style.width = '1600px'; // ความกว้างเป้าหมายที่คมชัด
+            container.style.maxWidth = 'none'; // ปลดล็อค max-width
+            container.style.zIndex = '-9999'; // ซ่อนไว้ข้างหลัง (กันคนเห็นตอนขยาย)
+
+            // ถ่ายภาพตอนที่ขยายร่างแล้ว (ใช้ scale 2 ก็พอ เพราะฐานกว้างแล้ว = 3200px)
+            html2canvas(container, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
+                // คืนค่า Style เดิมทันที (หดกลับ)
+                Object.assign(container.style, originalStyles);
+
                 canvas.toBlob(async (blob) => {
                     try {
                         const res = await fetch(`/api/upload?filename=cny-${Date.now()}.png`, { method: 'POST', body: blob });
