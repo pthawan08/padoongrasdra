@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNY Photo Booth (Final V10.16)</title>
+    <title>CNY Photo Booth (Final V10.17)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     
@@ -128,7 +128,7 @@
         .grid-strip2, .grid-strip3, .grid-strip4 { grid-template-columns: 1fr; }
         .grid-2x2 { grid-template-columns: 1fr 1fr; aspect-ratio: 1/1; }
         
-        /* 🔥 อัปเดต CSS สำหรับแก้ภาพเบลอ 🔥 */
+        /* 🔥 ภาพถ่ายใช้ img เพื่อความคมชัดสูงสุด 🔥 */
         .photo-slot { width: 100%; background-color: #eee; position: relative; overflow: hidden; }
         .photo-slot img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
         
@@ -138,14 +138,14 @@
         /* ข้อความคำอวยพร */
         .blessing-text { margin-top: 25px; line-height: 1.4; overflow: hidden; } 
         
-        /* 🔥 บังคับภาษาจีนให้อยู่บรรทัดเดียว (nowrap) และลดขนาดลงนิดนึง 🔥 */
+        /* 🔥 บังคับภาษาจีนห้ามตกบรรทัด 🔥 */
         .text-cn { 
             font-family: 'Zen Maru Gothic', sans-serif; 
-            font-size: 1.35rem; /* ลดจาก 1.5 ให้พอดีจอเล็ก */
+            font-size: 1.35rem; 
             display: block; 
             margin-bottom: 5px; 
             font-weight: 900; 
-            white-space: nowrap; /* 🔥 บังคับห้ามตกบรรทัด 🔥 */
+            white-space: nowrap; 
         }
         .text-th { font-family: 'Mali', cursive; font-size: 1.1rem; font-weight: 700; display: block; white-space: nowrap; }
 
@@ -241,7 +241,7 @@
     </div>
 
     <div class="container">
-        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.16 (Super Sharp HD + No Wrap)</div>
+        <div style="font-size: 0.7rem; color: #ffcccc; margin-bottom: 5px; opacity: 0.7;">Ver 10.17 (4K Quality + JPEG Fix)</div>
 
         <section id="step-welcome" class="active">
             <h1>ตรุษจีนเฮงๆ</h1>
@@ -367,12 +367,12 @@
             document.querySelectorAll('section').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
             document.getElementById('step-camera').classList.add('active');
             try {
-                // บังคับดึงกล้องความละเอียดสูง
+                // 🔥 บังคับเรียกความละเอียดสูงสุดเท่าที่กล้องมือถือจะทำได้ 🔥
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: "user", 
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 } 
+                        width: { ideal: 4096 }, // ขอ 4K ไปเลย เดี๋ยวเบราว์เซอร์จะให้ระดับสูงสุดของเครื่องมาเอง
+                        height: { ideal: 2160 } 
                     }, 
                     audio: false 
                 });
@@ -402,7 +402,8 @@
         function capture() {
             const v = document.getElementById('video');
             const c = document.createElement('canvas');
-            c.width = v.videoWidth; c.height = v.videoHeight;
+            c.width = v.videoWidth; 
+            c.height = v.videoHeight;
             const ctx = c.getContext('2d');
             ctx.translate(c.width, 0); ctx.scale(-1, 1);
             ctx.drawImage(v, 0, 0);
@@ -414,7 +415,6 @@
             grid.className = 'photo-grid ' + layouts[currentLayout].class; 
             grid.innerHTML = '';
             
-            // 🔥 เปลี่ยนวิธีโชว์รูปจาก background เป็นการใช้ <img> เพื่อให้ภาพคมชัดสุดๆ ตอนเซฟ 🔥
             photos.forEach(src => {
                 const d = document.createElement('div');
                 d.className = 'photo-slot'; 
@@ -476,8 +476,10 @@
             
             const container = document.getElementById('preview-container');
             
-            // ใช้ scale 3 ก็คมชัดเพียงพอแล้ว และไม่ทำให้ไฟล์ใหญ่เกินจน Error
-            html2canvas(container, { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+            // 🔥 อัด Scale ขึ้นเป็น 5 เท่า เพื่อความคมชัดระดับ HD ขั้นสุดตอนดาวน์โหลด 🔥
+            html2canvas(container, { scale: 5, useCORS: true, allowTaint: true }).then(canvas => {
+                
+                // 🔥 แปลงเป็น JPEG ที่คุณภาพ 85% จะทำให้ไฟล์เบา แต่คงความชัดไว้ 100% แก้ปัญหา QR หาย 🔥
                 canvas.toBlob(async (blob) => {
                     try {
                         const res = await fetch(`/api/upload?filename=cny-${Date.now()}.jpg`, { method: 'POST', body: blob });
@@ -494,10 +496,10 @@
                         document.getElementById("qrcode").innerHTML = "";
                         new QRCode(document.getElementById("qrcode"), { text: data.url, width: 160, height: 160, colorDark : "#D90000", colorLight : "#ffffff" });
                     } catch (e) { 
-                        alert("ขออภัย! อัปโหลดไม่สำเร็จ ลองอีกครั้งนะครับ Error: " + e.message); 
+                        alert("อัปโหลดไม่สำเร็จ (ระบบอาจรับไฟล์ไม่ไหว) ลองกดอีกครั้งนะครับ Error: " + e.message); 
                         btn.innerText = oldText; btn.disabled = false; 
                     }
-                }, 'image/jpeg', 0.9); // บีบอัดเป็น JPEG ที่คุณภาพ 90% เพื่อให้ไฟล์เบาและสร้าง QR ได้
+                }, 'image/jpeg', 0.85); 
             });
         }
     </script>
